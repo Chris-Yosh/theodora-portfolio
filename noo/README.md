@@ -12,21 +12,28 @@ La médiation, c'est deux parties qui se rapprochent. Les deux « o » de *noo* 
 - **Typo** : Instrument Serif (titres, chiffres), Geist (texte), Geist Mono (repères, petites étiquettes).
 - **Mise en page** : éditoriale, filets fins, beaucoup d'air, sections numérotées (01)…(05).
 
-## Animations
-- Intro : les deux cercles se rejoignent, puis le rideau se lève
-- Titres révélés mot à mot, images dévoilées par un rideau avec léger zoom et parallaxe
-- Phrase manifeste qui s'allume mot à mot au défilement
-- Compteurs, barre de réussite, fil des étapes qui se trace au défilement
-- Conversation MIA jouée message par message
-- Offres : fond encre qui monte au survol ; boutons avec bulle argile et flèche qui défile
-- Témoignages en fondu avec barre de progression, bandeau « Apaiser les tensions » en défilement lent
-- Défilement doux (Lenis, chargé depuis jsDelivr ; le site marche sans)
-- Tout est désactivé si `prefers-reduced-motion` est activé
+## Mise en scène (section par section)
+| Section | Effet |
+|---|---|
+| Intro | Compteur 000→100, les deux cercles se rejoignent, rideau qui se lève |
+| Hero | Rendu WebGL : deux formes « verre » (les parties) qui fusionnent au défilement ; leur intersection argile (l'accord) grandit jusqu'à tout remplir. Une goutte suit la souris. Titre géant mot à mot, capsule photo qui s'ouvre, hero épinglé pendant la fusion |
+| (01) Manifeste | La phrase s'allume mot à mot ; mosaïque (bento) dont la photo s'ouvre depuis une capsule |
+| (02) Comparatif | Défilement horizontal épinglé, une infographie par chiffre : 80 points sur 100, barres 21 j vs 28 mois, cercles à l'échelle 49 € vs 5 000 €, anneau 70 % |
+| (03) Étapes | Cartes empilées ; dans chaque carte, les deux cercles se rapprochent jusqu'à l'accord |
+| (04) MIA | Le panneau vert s'agrandit jusqu'au plein écran, la conversation se redresse en 3D puis s'écrit |
+| (05) Offres | Les trois cartes arrivent en éventail puis se déploient ; inclinaison 3D et reflet au survol |
+| Témoignages | Bandeau qui accélère et s'incline selon la vitesse de défilement ; avis éparpillés qu'on peut attraper et lancer |
+| Pied de page | Dévoilé sous le contenu ; les deux « o » géants se rejoignent |
+
+Partout : défilement doux (Lenis), curseur personnalisé (deux cercles au survol des liens), boutons aimantés, en-tête flottant qui s'adapte au fond clair/sombre et se cache en descendant.
+
+**Robustesse** : GSAP, ScrollTrigger et Lenis viennent de jsDelivr. Sans eux (ou sans WebGL), la page reste complète et propre (versions statiques). `prefers-reduced-motion` coupe toute la mise en scène. Sur mobile : pas d'épinglage horizontal ni d'éparpillement, les sections s'empilent proprement.
 
 ## Fichiers
 - `index.html` — page d'accueil
 - `assets/css/style.css` — design system et mise en page
-- `assets/js/main.js` — interactions (sans dépendance)
+- `assets/js/gl.js` — hero WebGL (shader des deux cercles)
+- `assets/js/main.js` — mise en scène (GSAP + ScrollTrigger + Lenis)
 - `assets/img/` — visuels du site actuel, recadrés et convertis en WebP
 
 ## Points à vérifier côté client
