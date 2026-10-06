@@ -1,0 +1,70 @@
+{
+ "behance": "https://www.behance.net/gallery/201505355/La-ligue-de-lenseignement-de-Paris",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/01.webp",
+   "w": 1400,
+   "h": 751
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/02.webp",
+     "w": 900,
+     "h": 507
+    },
+    {
+     "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/03.webp",
+     "w": 900,
+     "h": 507
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/04.webp",
+   "w": 1400,
+   "h": 1369
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/05.webp",
+   "w": 1400,
+   "h": 1836
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/06.webp",
+   "w": 1400,
+   "h": 575
+  },
+  {
+   "type": "video",
+   "id": "964521788",
+   "hash": null
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/la-ligue-de-lenseignement-de-paris/cs/07.webp",
+   "w": 1400,
+   "h": 572
+  }
+ ]
+}

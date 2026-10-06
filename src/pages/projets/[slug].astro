@@ -2,6 +2,15 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
+// Études de cas extraites de Behance : un fichier JSON par projet, blocs dans l'ordre d'origine
+type Img = { src: string; w: number; h: number };
+type Block =
+  | ({ type: 'image'; scale: number; full: boolean; alt: string } & Img)
+  | { type: 'grid'; items: Img[] }
+  | { type: 'text'; paras: { html: string; big: boolean; center: boolean }[] }
+  | { type: 'video'; id: string; hash?: string | null };
+const studies = import.meta.glob<{ default: { behance: string; blocks: Block[] } }>('../../data/casestudies/*.json', { eager: true });
+
 export async function getStaticPaths() {
   const all = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   return all.map((project, i) => ({ params: { slug: project.id }, props: { project, next: all[(i + 1) % all.length] } }));
@@ -10,58 +19,84 @@ const { project, next } = Astro.props;
 const { Content } = await render(project);
 const d = project.data;
 const tc = (s?: number) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
-const [lead, ...more] = d.videos;
-const meta = (v: { title: string }) => `${d.title}${d.client && d.client !== d.title ? ' · ' + d.client : ''} · ${d.year}`;
+const blocks: Block[] = studies[`../../data/casestudies/${project.id}.json`]?.default.blocks ?? [];
+
+// Les vidéos qui se suivent sont regroupées sur une même ligne
+type Video = { id: string; hash?: string | null; title: string; ratio: string; duration?: number };
+type Section = Exclude<Block, { type: 'video' }> | { type: 'videos'; items: Video[] };
+const sections: Section[] = [];
+for (const b of blocks) {
+  if (b.type === 'video') {
+    const known = d.videos.find((v) => v.id === b.id);
+    const v: Video = { id: b.id, hash: b.hash ?? known?.hash, title: known?.title ?? d.title, ratio: known?.ratio ?? '16 / 9', duration: known?.duration };
+    const last = sections.at(-1);
+    if (last?.type === 'videos') last.items.push(v);
+    else sections.push({ type: 'videos', items: [v] });
+  } else sections.push(b);
+}
+const rows = (items: Img[]) => Array.from({ length: Math.ceil(items.length / 3) }, (_, i) => items.slice(i * 3, i * 3 + 3));
+const alt = (a: string) => (a.startsWith('Image may contain') ? '' : a);
+const meta = `${d.title}${d.client && d.client !== d.title ? ' · ' + d.client : ''} · ${d.year}`;
 ---
 <Base title={d.title} image={d.cover} description={`${d.title}${d.client ? ` pour ${d.client}` : ''} — ${d.disciplines.join(', ')}.`}>
   <article class={`t-${d.color}`}>
     <header class="head wrap">
       <a class="back label ulink reverse" href="/#index" data-fade>← Tous les projets</a>
       <h1 data-project-title>{d.title}</h1>
-      <dl class="facts">
-        {d.client && <div data-fade><dt class="label muted">Client</dt><dd>{d.client}</dd></div>}
-        <div data-fade><dt class="label muted">Année</dt><dd class="tnum">{d.year}</dd></div>
-        <div data-fade><dt class="label muted">Discipline</dt><dd>{d.disciplines.join(', ')}</dd></div>
-        {d.tools.length > 0 && <div data-fade><dt class="label muted">Outils</dt><dd>{d.tools.map((t) => t.replace('Adobe ', '')).join(', ')}</dd></div>}
-        {d.videos.length > 0 && <div data-fade><dt class="label muted">Films</dt><dd class="tnum">{d.videos.length}</dd></div>}
-      </dl>
+      <div class="intro">
+        <div class="summary" data-fade><Content /></div>
+        <dl class="facts">
+          {d.client && <div data-fade><dt class="label muted">Client</dt><dd>{d.client}</dd></div>}
+          <div data-fade><dt class="label muted">Année</dt><dd class="tnum">{d.year}</dd></div>
+          <div data-fade><dt class="label muted">Discipline</dt><dd>{d.disciplines.join(', ')}</dd></div>
+          {d.tools.length > 0 && <div data-fade><dt class="label muted">Outils</dt><dd>{d.tools.map((t) => t.replace('Adobe ', '')).join(', ')}</dd></div>}
+        </dl>
+      </div>
     </header>
 
-    {lead ? (
-      <div class="wrap">
-        <button class="lead" type="button" data-film data-vimeo={lead.id} data-hash={lead.hash} data-title={lead.title} data-meta={meta(lead)} data-poster={`/images/videos/${lead.id}.webp`} data-ratio={lead.ratio} data-cursor="Lire" style={`--ratio:${lead.ratio}`}>
-          <span class="film-media lead-media" data-reveal>
-            <img src={`/images/videos/${lead.id}.webp`} alt="" />
-            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>
-          </span>
-          <span class="cap"><span class="it">{lead.title}</span><span class="label muted tnum">{tc(lead.duration)}</span></span>
-        </button>
+    <!-- L'étude de cas, telle que publiée sur Behance -->
+    <div class="sheet-wrap">
+      <div class="sheet">
+        {sections.map((s) => {
+          if (s.type === 'image')
+            return (
+              <figure class={`cs-img ${s.full ? 'full' : ''}`} style={`--s:${s.scale}`} data-cs>
+                <img src={s.src} width={s.w} height={s.h} alt={alt(s.alt)} loading="lazy" decoding="async" />
+              </figure>
+            );
+          if (s.type === 'grid')
+            return (
+              <div class="cs-grid" data-cs>
+                {rows(s.items).map((row) => (
+                  <div class="cs-row">
+                    {row.map((it) => <img src={it.src} width={it.w} height={it.h} style={`flex:${(it.w / it.h).toFixed(3)}`} alt="" loading="lazy" decoding="async" />)}
+                  </div>
+                ))}
+              </div>
+            );
+          if (s.type === 'text')
+            return (
+              <div class="cs-text" data-cs>
+                {s.paras.map((p) => <p class:list={[{ big: p.big, center: p.center }]} set:html={p.html} />)}
+              </div>
+            );
+          return (
+            <div class={`cs-videos n${s.items.length}`} data-cs>
+              {s.items.map((v) => (
+                <button class={`cs-video ${v.ratio === '9 / 16' ? 'vertical' : ''}`} type="button" data-film data-vimeo={v.id} data-hash={v.hash ?? undefined} data-title={v.title} data-meta={meta} data-poster={`/images/videos/${v.id}.webp`} data-ratio={v.ratio} data-cursor="Lire" style={`--ratio:${v.ratio}`}>
+                  <span class="film-media">
+                    <img src={`/images/videos/${v.id}.webp`} alt="" loading="lazy" />
+                    <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>
+                  </span>
+                  <span class="cap"><span class="it">{v.title}</span><span class="label muted tnum">{tc(v.duration)}</span></span>
+                </button>
+              ))}
+            </div>
+          );
+        })}
       </div>
-    ) : (
-      <div class="wrap"><div class="lead-media still" data-reveal><img src={d.images[0] ?? d.cover} alt="" /></div></div>
-    )}
-
-    <div class="wrap body">
-      <div class="text"><Content /></div>
-      <a class="label ulink" href={d.behance} target="_blank" rel="noopener">Le projet complet sur Behance ↗</a>
+      <p class="source"><a class="label ulink" href={d.behance} target="_blank" rel="noopener">Voir aussi sur Behance ↗</a></p>
     </div>
-
-    {more.length > 0 && (
-      <div class="wrap more">
-        {more.map((v) => (
-          <button class="film" type="button" data-film data-vimeo={v.id} data-hash={v.hash} data-title={v.title} data-meta={meta(v)} data-poster={`/images/videos/${v.id}.webp`} data-ratio={v.ratio} data-cursor="Lire" style={`--ratio:${v.ratio}`}>
-            <span class="film-media" data-reveal><img src={`/images/videos/${v.id}.webp`} alt="" loading="lazy" /></span>
-            <span class="cap"><span class="it">{v.title}</span><span class="label muted tnum">{tc(v.duration)}</span></span>
-          </button>
-        ))}
-      </div>
-    )}
-
-    {d.images.length > 0 && (
-      <div class="wrap shots">
-        {d.images.map((src, i) => <figure class={`shot s${i % 3}`} data-reveal><img src={src} alt="" loading="lazy" decoding="async" /></figure>)}
-      </div>
-    )}
 
     <a class={`next t-${next.data.color}`} href={`/projets/${next.id}/`} data-cursor="Suivant">
       <span class="label">Projet suivant</span>
@@ -73,36 +108,40 @@ const meta = (v: { title: string }) => `${d.title}${d.client && d.client !== d.t
 
 <style>
   article { --tint: var(--lilac); }
-  .head { padding-block: 120px clamp(48px, 7vw, 96px); }
+  .head { padding-block: 120px clamp(48px, 7vw, 88px); }
   .back { display: inline-block; margin-bottom: clamp(32px, 6vw, 72px); }
   h1 { font-size: clamp(3.6rem, 12vw, 13rem); max-width: 14ch; }
-  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; margin: clamp(40px, 6vw, 72px) 0 0; padding-top: 22px; border-top: 1px solid var(--line); }
-  dd { margin: 8px 0 0; }
+  .intro { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 6vw, 96px); margin-top: clamp(40px, 6vw, 72px); padding-top: 24px; border-top: 1px solid var(--line); }
+  .summary { font: 400 clamp(1.5rem, 2.6vw, 2.3rem)/1.18 var(--serif); max-width: 30ch; }
+  .summary :global(p) { margin: 0; }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 24px; margin: 0; align-content: start; }
+  dd { margin: 6px 0 0; }
+  @media (max-width: 760px) { .intro { grid-template-columns: 1fr; } }
 
-  .lead, .film { display: block; width: 100%; text-align: left; cursor: none; }
-  .film-media, .lead-media { position: relative; display: block; overflow: hidden; border-radius: var(--radius); background: var(--tint); aspect-ratio: var(--ratio, 16 / 9); }
-  .lead-media { max-height: 86vh; margin-inline: auto; }
-  .lead[style*="9 / 16"] .lead-media { width: min(100%, 460px); }
-  .lead-media img, .film-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-  .lead:hover img, .film:hover img { transform: scale(1.04); }
-  .still { aspect-ratio: 16 / 9; }
-  .play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 84px; height: 84px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); color: var(--ink); transition: scale 0.6s var(--ease); }
-  .lead:hover .play { scale: 1.12; }
-  .cap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 14px; font-size: 1.4rem; }
-
-  .body { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 32px; padding-block: clamp(56px, 8vw, 120px); }
-  .text { font: 400 clamp(1.6rem, 3vw, 2.6rem)/1.15 var(--serif); max-width: 28ch; }
-  .text :global(p) { margin: 0; }
-  @media (max-width: 760px) { .body { grid-template-columns: 1fr; } }
-
-  .more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(20px, 3vw, 40px); align-items: start; padding-bottom: clamp(56px, 8vw, 120px); }
-
-  .shots { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 28px); }
-  .shot { margin: 0; overflow: hidden; border-radius: var(--radius); background: var(--tint); }
-  .shot img { width: 100%; height: auto; }
-  .s0 { grid-column: 1 / -1; }
-  .s1 { grid-column: 1 / 7; } .s2 { grid-column: 7 / -1; }
-  @media (max-width: 760px) { .shot { grid-column: 1 / -1 !important; } }
+  /* Feuille de l'étude de cas : les visuels s'enchaînent bord à bord, comme sur Behance */
+  .sheet-wrap { padding-inline: var(--gutter); }
+  .sheet { max-width: 1400px; margin: 0 auto; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 1px 0 var(--line), 0 40px 80px -50px rgb(29 26 36 / 0.35); }
+  .cs-img { margin: 0 auto; width: calc(var(--s) * 100%); }
+  .cs-img img { width: 100%; height: auto; }
+  .cs-grid { display: grid; gap: 0; }
+  .cs-row { display: flex; }
+  .cs-row img { min-width: 0; width: 100%; height: auto; object-fit: cover; }
+  .cs-text { display: grid; gap: 14px; padding: clamp(36px, 6vw, 80px) clamp(20px, 8vw, 140px); }
+  .cs-text p { margin: 0; font-size: 1.05rem; line-height: 1.6; max-width: 62ch; }
+  .cs-text p.big { font: 400 clamp(1.7rem, 3.2vw, 2.8rem)/1.12 var(--serif); max-width: 26ch; }
+  .cs-text p.center { margin-inline: auto; text-align: center; }
+  .cs-text p.big :global(b) { font-weight: 400; }
+  .cs-text :global(a) { text-decoration: underline; text-underline-offset: 3px; }
+  .cs-videos { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(16px, 3vw, 40px); padding: clamp(28px, 5vw, 64px) clamp(16px, 6vw, 96px); background: var(--paper); }
+  .cs-video { flex: 1 1 520px; max-width: 1000px; text-align: left; cursor: none; }
+  .cs-video.vertical { flex: 0 1 320px; }
+  .film-media { position: relative; display: block; overflow: hidden; border-radius: 12px; background: var(--tint); aspect-ratio: var(--ratio); }
+  .film-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .cs-video:hover img { transform: scale(1.04); }
+  .play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 76px; height: 76px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); color: var(--ink); transition: scale 0.6s var(--ease); }
+  .cs-video:hover .play { scale: 1.12; }
+  .cap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 12px; font-size: 1.25rem; }
+  .source { max-width: 1400px; margin: 22px auto 0; text-align: right; }
 
   .next { position: relative; display: grid; gap: 14px; margin-top: clamp(100px, 14vw, 200px); padding: clamp(64px, 10vw, 140px) var(--gutter); background: var(--tint); overflow: hidden; cursor: none; }
   .next-t { font: clamp(3rem, 10vw, 10rem)/0.9 var(--serif); letter-spacing: -0.02em; position: relative; z-index: 1; }

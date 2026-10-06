@@ -9,15 +9,6 @@ color: pink
 featured: true
 behance: "https://www.behance.net/gallery/219678237/ARTE"
 cover: "/images/projects/arte/cover.webp"
-images:
-  - "/images/projects/arte/01.webp"
-  - "/images/projects/arte/02.webp"
-  - "/images/projects/arte/03.webp"
-  - "/images/projects/arte/04.webp"
-  - "/images/projects/arte/05.webp"
-  - "/images/projects/arte/06.webp"
-  - "/images/projects/arte/07.gif"
-  - "/images/projects/arte/08.webp"
 videos:
   - id: "1058257486"
     title: "Ligne rouge"

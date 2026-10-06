@@ -9,9 +9,6 @@ color: lilac
 featured: true
 behance: "https://www.behance.net/gallery/179801041/Game-ON"
 cover: "/images/projects/game-on/cover.webp"
-images:
-  - "/images/projects/game-on/01.webp"
-  - "/images/projects/game-on/02.gif"
 videos:
   - id: "863101750"
     title: "Loop, Available & Gameboy"

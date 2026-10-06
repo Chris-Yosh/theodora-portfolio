@@ -1,0 +1,78 @@
+{
+ "behance": "https://www.behance.net/gallery/179801041/Game-ON",
+ "blocks": [
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>MOTION DESIGNER 2D/3D</b>",
+     "big": true,
+     "center": false
+    },
+    {
+     "html": "_______________________________________________________________________",
+     "big": false,
+     "center": false
+    },
+    {
+     "html": "<i>Blender . After Effects</i>",
+     "big": false,
+     "center": false
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "863101750",
+   "hash": null
+  },
+  {
+   "type": "image",
+   "scale": 0.429,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/game-on/cs/01.webp",
+   "w": 600,
+   "h": 600
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/game-on/cs/02.webp",
+     "w": 1080,
+     "h": 1080
+    },
+    {
+     "src": "/images/projects/game-on/cs/03.webp",
+     "w": 800,
+     "h": 444
+    }
+   ]
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/game-on/cs/04.webp",
+     "w": 1080,
+     "h": 1080
+    },
+    {
+     "src": "/images/projects/game-on/cs/05.webp",
+     "w": 600,
+     "h": 600
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/game-on/cs/06.webp",
+   "w": 1400,
+   "h": 292
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "behance": "https://www.behance.net/gallery/130116679/Le-Dnicheur-pub",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/01.webp",
+   "w": 1400,
+   "h": 486
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/02.webp",
+   "w": 1400,
+   "h": 1780
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/03.webp",
+   "w": 1400,
+   "h": 2250
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/04.webp",
+   "w": 1400,
+   "h": 394
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/05.webp",
+   "w": 1400,
+   "h": 324
+  },
+  {
+   "type": "video",
+   "id": "639169921",
+   "hash": "aee799bfc1"
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/le-denicheur-pub/cs/06.webp",
+   "w": 1400,
+   "h": 365
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/le-denicheur-pub/cs/07.webp",
+   "w": 1400,
+   "h": 119
+  }
+ ]
+}

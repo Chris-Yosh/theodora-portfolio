@@ -1,0 +1,138 @@
+{
+ "behance": "https://www.behance.net/gallery/243074203/Activation-LOral-Pro-Collage-digital-IA",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/01.webp",
+   "w": 1400,
+   "h": 131
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/02.webp",
+   "w": 1400,
+   "h": 620
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: person and screenshot",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/03.webp",
+   "w": 1400,
+   "h": 621
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/04.webp",
+   "w": 1400,
+   "h": 266
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/05.webp",
+   "w": 1400,
+   "h": 510
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/06.webp",
+   "w": 1400,
+   "h": 2443
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: cartoon",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/07.webp",
+   "w": 1400,
+   "h": 404
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: indoor and bottle",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/08.webp",
+   "w": 1400,
+   "h": 1266
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/09.webp",
+   "w": 1400,
+   "h": 382
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/10.webp",
+   "w": 1400,
+   "h": 583
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: bottle",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/11.webp",
+   "w": 1400,
+   "h": 1455
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/12.webp",
+     "w": 1000,
+     "h": 540
+    },
+    {
+     "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/13.webp",
+     "w": 1000,
+     "h": 540
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<i><b>Merci !</b></i><br><i>... d'avoir défilé jusqu'ici :) </i>",
+     "big": true,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/activation-loreal-pro-collage-digital-ia/cs/14.webp",
+   "w": 1400,
+   "h": 376
+  }
+ ]
+}

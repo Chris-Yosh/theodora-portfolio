@@ -9,7 +9,6 @@ color: lilac
 featured: false
 behance: "https://www.behance.net/gallery/255144349/Radio-DAB"
 cover: "/images/projects/radio-dab/cover.webp"
-images: []
 videos:
   - id: "1223084041"
     title: "DAB+, la radio"

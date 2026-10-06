@@ -9,12 +9,6 @@ color: sky
 featured: true
 behance: "https://www.behance.net/gallery/201431641/BluePro"
 cover: "/images/projects/bluepro/cover.webp"
-images:
-  - "/images/projects/bluepro/01.webp"
-  - "/images/projects/bluepro/02.webp"
-  - "/images/projects/bluepro/03.webp"
-  - "/images/projects/bluepro/04.webp"
-  - "/images/projects/bluepro/05.webp"
 videos:
   - id: "963161307"
     hash: "806bec4b12"

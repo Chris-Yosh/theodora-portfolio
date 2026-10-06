@@ -30,6 +30,21 @@ if (!reduce) {
   });
 }
 
+/* ---------- Nouvelle page : on part toujours du haut ----------
+   (sauf retour arrière, ancre, ou si la personne a déjà commencé à défiler).
+   Certains lecteurs intégrés restaurent la position de la page précédente. */
+const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+if (!location.hash && nav?.type !== 'back_forward') {
+  history.scrollRestoration = 'manual';
+  let touched = false;
+  const stop = () => { touched = true; };
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((t) => window.addEventListener(t, stop, { once: true, passive: true }));
+  const top = () => { if (!touched && scrollY > 0) { window.scrollTo(0, 0); lenis?.scrollTo(0, { immediate: true, force: true }); } };
+  top();
+  window.addEventListener('load', top);
+  [120, 400, 900].forEach((ms) => setTimeout(top, ms));
+}
+
 /* ---------- En-tête : se cache en descendant, revient en remontant ---------- */
 const header = $('[data-header]');
 if (header && !reduce) {
@@ -403,11 +418,9 @@ function projectPage() {
     gsap.from(s.chars, { yPercent: 110, duration: 1.5, ease: 'silk', stagger: 0.025, delay: 0.75 });
   }
   $$('[data-fade]').forEach((el, k) => gsap.from(el, { y: 30, opacity: 0, duration: 1.2, ease: 'expo.out', delay: 1 + k * 0.08 }));
-  $$('[data-reveal]').forEach((el) => {
-    const img = $('img', el);
-    const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%' } });
-    tl.from(el, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.4, ease: 'curtain' });
-    if (img) tl.from(img, { scale: 1.3, duration: 1.8, ease: 'silk' }, 0);
+  ScrollTrigger.batch('[data-cs]', {
+    start: 'top 92%',
+    onEnter: (batch) => gsap.from(batch, { y: 40, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08 }),
   });
 }
 

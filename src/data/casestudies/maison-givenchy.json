@@ -1,0 +1,115 @@
+{
+ "behance": "https://www.behance.net/gallery/130249763/Maison-Givenchy",
+ "blocks": [
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/maison-givenchy/cs/01.webp",
+     "w": 700,
+     "h": 394
+    },
+    {
+     "src": "/images/projects/maison-givenchy/cs/02.webp",
+     "w": 700,
+     "h": 394
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/maison-givenchy/cs/03.webp",
+   "w": 1400,
+   "h": 146
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>(Short) Rétrospective de bijoux </b><b>de</b><br><b>la Maison Givenchy.</b><br><b>H. de Givenchy &gt; Matthew Williams.</b>",
+     "big": true,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: clothing, cartoon and person",
+   "src": "/images/projects/maison-givenchy/cs/04.webp",
+   "w": 1400,
+   "h": 450
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: electronics, indoor and laptop",
+   "src": "/images/projects/maison-givenchy/cs/05.webp",
+   "w": 1400,
+   "h": 688
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>Arty - Urbain - Collage</b>",
+     "big": true,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "640319308",
+   "hash": null
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: typography, font and logo",
+   "src": "/images/projects/maison-givenchy/cs/06.webp",
+   "w": 1400,
+   "h": 389
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/maison-givenchy/cs/07.webp",
+     "w": 700,
+     "h": 394
+    },
+    {
+     "src": "/images/projects/maison-givenchy/cs/08.webp",
+     "w": 700,
+     "h": 394
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>Merci ...</b><br>d'avoir défilé jusqu'ici :)",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/maison-givenchy/cs/09.webp",
+   "w": 1400,
+   "h": 146
+  }
+ ]
+}

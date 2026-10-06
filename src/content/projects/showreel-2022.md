@@ -9,10 +9,6 @@ color: pink
 featured: false
 behance: "https://www.behance.net/gallery/152962299/Showreel-2022"
 cover: "/images/projects/showreel-2022/cover.webp"
-images:
-  - "/images/projects/showreel-2022/01.webp"
-  - "/images/projects/showreel-2022/02.webp"
-  - "/images/projects/showreel-2022/03.webp"
 videos:
   - id: "750324854"
     hash: "6c43c2b389"

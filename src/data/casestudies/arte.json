@@ -1,0 +1,122 @@
+{
+ "behance": "https://www.behance.net/gallery/219678237/ARTE",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/arte/cs/01.webp",
+   "w": 1400,
+   "h": 316
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/arte/cs/02.webp",
+   "w": 1400,
+   "h": 412
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/arte/cs/03.webp",
+   "w": 1400,
+   "h": 649
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/arte/cs/04.webp",
+   "w": 1400,
+   "h": 1997
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/arte/cs/05.webp",
+   "w": 1400,
+   "h": 460
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/arte/cs/06.webp",
+   "w": 1400,
+   "h": 872
+  },
+  {
+   "type": "video",
+   "id": "1058257486"
+  },
+  {
+   "type": "video",
+   "id": "1057899013"
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/arte/cs/07.webp",
+   "w": 1400,
+   "h": 830
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>NB : </b><b>J'alterne les phrases courtes et les phrases plus longues, pour avoir de la respiration et un rythme de lecture confortable.</b>",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "1057512407"
+  },
+  {
+   "type": "video",
+   "id": "1057510793"
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Merci !<br>... d'avoir fait défiler jusqu'ici :)",
+     "big": true,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/arte/cs/08.webp",
+   "w": 1400,
+   "h": 1324
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/arte/cs/09.webp",
+   "w": 1400,
+   "h": 105
+  }
+ ]
+}

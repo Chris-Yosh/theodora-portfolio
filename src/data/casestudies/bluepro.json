@@ -1,0 +1,135 @@
+{
+ "behance": "https://www.behance.net/gallery/201431641/BluePro",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "Image may contain: screenshot and moon",
+   "src": "/images/projects/bluepro/cs/01.webp",
+   "w": 1400,
+   "h": 352
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": ".",
+     "big": false,
+     "center": false
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/bluepro/cs/02.webp",
+   "w": 1400,
+   "h": 547
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": ".",
+     "big": false,
+     "center": false
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/bluepro/cs/03.webp",
+   "w": 1400,
+   "h": 1532
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and abstract",
+   "src": "/images/projects/bluepro/cs/04.webp",
+   "w": 1400,
+   "h": 1126
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/bluepro/cs/05.webp",
+     "w": 600,
+     "h": 338
+    },
+    {
+     "src": "/images/projects/bluepro/cs/06.webp",
+     "w": 600,
+     "h": 338
+    },
+    {
+     "src": "/images/projects/bluepro/cs/07.webp",
+     "w": 600,
+     "h": 338
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "963161307",
+   "hash": "806bec4b12"
+  },
+  {
+   "type": "video",
+   "id": "963176327",
+   "hash": "79a39bead5"
+  },
+  {
+   "type": "video",
+   "id": "956407813",
+   "hash": "de1f6c6b1e"
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>Merci</b><br>... d'avoir fait défiler jusqu'ici :)",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/bluepro/cs/08.webp",
+     "w": 600,
+     "h": 338
+    },
+    {
+     "src": "/images/projects/bluepro/cs/09.webp",
+     "w": 600,
+     "h": 338
+    },
+    {
+     "src": "/images/projects/bluepro/cs/10.webp",
+     "w": 600,
+     "h": 338
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/bluepro/cs/11.webp",
+   "w": 1400,
+   "h": 495
+  }
+ ]
+}

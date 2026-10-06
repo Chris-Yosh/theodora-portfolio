@@ -9,15 +9,6 @@ color: sage
 featured: true
 behance: "https://www.behance.net/gallery/224845827/LOral-Teaser-Head-SPA"
 cover: "/images/projects/loreal-teaser-head-spa/cover.webp"
-images:
-  - "/images/projects/loreal-teaser-head-spa/01.webp"
-  - "/images/projects/loreal-teaser-head-spa/02.webp"
-  - "/images/projects/loreal-teaser-head-spa/03.webp"
-  - "/images/projects/loreal-teaser-head-spa/04.webp"
-  - "/images/projects/loreal-teaser-head-spa/05.webp"
-  - "/images/projects/loreal-teaser-head-spa/06.webp"
-  - "/images/projects/loreal-teaser-head-spa/07.webp"
-  - "/images/projects/loreal-teaser-head-spa/08.webp"
 videos:
   - id: "1080443990"
     title: "LOreal - Head Spa"

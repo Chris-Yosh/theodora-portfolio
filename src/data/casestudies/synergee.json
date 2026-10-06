@@ -1,0 +1,138 @@
+{
+ "behance": "https://www.behance.net/gallery/152946933/Synergee",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/synergee/cs/01.webp",
+   "w": 1400,
+   "h": 587
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/synergee/cs/02.webp",
+   "w": 1400,
+   "h": 465
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: cartoon, drawing and illustration",
+   "src": "/images/projects/synergee/cs/03.webp",
+   "w": 1400,
+   "h": 499
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot and parallel",
+   "src": "/images/projects/synergee/cs/04.webp",
+   "w": 1400,
+   "h": 465
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: abstract, screenshot and drawing",
+   "src": "/images/projects/synergee/cs/05.webp",
+   "w": 1400,
+   "h": 665
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: parallel",
+   "src": "/images/projects/synergee/cs/06.webp",
+   "w": 1400,
+   "h": 389
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: cartoon, drawing and sketch",
+   "src": "/images/projects/synergee/cs/07.webp",
+   "w": 1400,
+   "h": 1218
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot, parallel and line",
+   "src": "/images/projects/synergee/cs/08.webp",
+   "w": 1400,
+   "h": 465
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: drawing, sketch and cartoon",
+   "src": "/images/projects/synergee/cs/09.webp",
+   "w": 1400,
+   "h": 788
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Given the <b>very tiiiiight deadlines for the 15 videos, </b>I had to opt for a streamlined visual style while ensuring that the character animations remained fluid and expressive, to convey emotion despite the simplicity !",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: drawing and sketch",
+   "src": "/images/projects/synergee/cs/10.webp",
+   "w": 1400,
+   "h": 1130
+  },
+  {
+   "type": "video",
+   "id": "747356898",
+   "hash": "bf5a5d72d3"
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b>Merci :)</b><br>... d'avoir défilé jusqu'ici !",
+     "big": true,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/synergee/cs/11.webp",
+   "w": 1400,
+   "h": 343
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: logo and screenshot",
+   "src": "/images/projects/synergee/cs/12.webp",
+   "w": 1400,
+   "h": 190
+  }
+ ]
+}

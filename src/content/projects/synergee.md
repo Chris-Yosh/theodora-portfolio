@@ -9,15 +9,6 @@ color: peach
 featured: false
 behance: "https://www.behance.net/gallery/152946933/Synergee"
 cover: "/images/projects/synergee/cover.webp"
-images:
-  - "/images/projects/synergee/01.webp"
-  - "/images/projects/synergee/02.webp"
-  - "/images/projects/synergee/03.webp"
-  - "/images/projects/synergee/04.webp"
-  - "/images/projects/synergee/05.webp"
-  - "/images/projects/synergee/06.webp"
-  - "/images/projects/synergee/07.webp"
-  - "/images/projects/synergee/08.webp"
 videos:
   - id: "747356898"
     hash: "bf5a5d72d3"

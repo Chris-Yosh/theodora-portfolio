@@ -1,0 +1,29 @@
+{
+ "behance": "https://www.behance.net/gallery/255144349/Radio-DAB",
+ "blocks": [
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Mise en page : WORK IN PROGRESS :)<br>... more to come!",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "1223084041"
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Mercii",
+     "big": false,
+     "center": true
+    }
+   ]
+  }
+ ]
+}

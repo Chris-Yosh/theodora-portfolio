@@ -1,0 +1,62 @@
+{
+ "behance": "https://www.behance.net/gallery/152962299/Showreel-2022",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/showreel-2022/cs/01.webp",
+   "w": 1400,
+   "h": 226
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Time for a coffee break, here a compilation of 5 years of work.<br>Big thank you to every partners and clients I worked with.",
+     "big": false,
+     "center": true
+    },
+    {
+     "html": "Enjoy!",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "id": "750324854",
+   "hash": "6c43c2b389"
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/showreel-2022/cs/02.webp",
+   "w": 1400,
+   "h": 1575
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "Specialised in explainer videos, I explain complex concept, to a large audience, and help clients to connect a message to a creative narrative.",
+     "big": false,
+     "center": false
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/showreel-2022/cs/03.webp",
+   "w": 1400,
+   "h": 379
+  }
+ ]
+}

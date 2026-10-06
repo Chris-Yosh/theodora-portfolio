@@ -1,0 +1,104 @@
+{
+ "behance": "https://www.behance.net/gallery/86834233/Run-a-meeting-Axa",
+ "blocks": [
+  {
+   "type": "image",
+   "scale": 1,
+   "full": true,
+   "alt": "",
+   "src": "/images/projects/run-a-meeting-axa/cs/01.webp",
+   "w": 1400,
+   "h": 533
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/run-a-meeting-axa/cs/02.webp",
+   "w": 1400,
+   "h": 212
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/run-a-meeting-axa/cs/03.webp",
+     "w": 800,
+     "h": 450
+    },
+    {
+     "src": "/images/projects/run-a-meeting-axa/cs/04.webp",
+     "w": 800,
+     "h": 450
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot",
+   "src": "/images/projects/run-a-meeting-axa/cs/05.webp",
+   "w": 1400,
+   "h": 603
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: screenshot, cartoon and abstract",
+   "src": "/images/projects/run-a-meeting-axa/cs/06.webp",
+   "w": 1400,
+   "h": 590
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "Image may contain: drawing",
+   "src": "/images/projects/run-a-meeting-axa/cs/07.webp",
+   "w": 1400,
+   "h": 887
+  },
+  {
+   "type": "video",
+   "id": "366472764",
+   "hash": null
+  },
+  {
+   "type": "grid",
+   "items": [
+    {
+     "src": "/images/projects/run-a-meeting-axa/cs/08.webp",
+     "w": 800,
+     "h": 450
+    },
+    {
+     "src": "/images/projects/run-a-meeting-axa/cs/09.webp",
+     "w": 800,
+     "h": 450
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "paras": [
+    {
+     "html": "<b></b><b></b><b>Merci :)</b><br>... d'avoir défilé jusqu'ici !",
+     "big": false,
+     "center": true
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "scale": 1,
+   "full": false,
+   "alt": "",
+   "src": "/images/projects/run-a-meeting-axa/cs/10.webp",
+   "w": 1400,
+   "h": 165
+  }
+ ]
+}
