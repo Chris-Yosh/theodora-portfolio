@@ -92,9 +92,11 @@ function hero() {
   const mark = $('[data-mark]', root)!;
 
   // La fenêtre vidéo est posée exactement sur la capsule de la phrase
+  // Mesure sans les transformations (intro, souris, scroll) : position de mise en page pure
   const place = () => {
-    const s = stage.getBoundingClientRect(), c = capsule.getBoundingClientRect();
-    return { left: c.left - s.left, top: c.top - s.top, width: c.width, height: c.height };
+    let x = 0, y = 0, n: HTMLElement | null = capsule;
+    while (n && n !== stage) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+    return { left: x, top: y, width: capsule.offsetWidth, height: capsule.offsetHeight };
   };
   gsap.set(frame, place());
   let opened = 0;
@@ -163,10 +165,10 @@ function hero() {
     const tl = gsap.timeline({
       scrollTrigger: { trigger: root, start: 'top top', end: '+=130%', pin: true, scrub: 1, invalidateOnRefresh: true, onUpdate: (st) => (opened = st.progress) },
     });
-    tl.fromTo(frame, { ...place() }, {
+    tl.fromTo(frame, { left: () => place().left, top: () => place().top, width: () => place().width, height: () => place().height }, {
       left: 0, top: 0, width: () => stage.clientWidth, height: () => stage.clientHeight, ease: 'power3.inOut', immediateRender: false,
     }, 0)
-      .fromTo(frame, { borderRadius: () => capsule.getBoundingClientRect().height / 2 }, { borderRadius: 0, ease: 'power2.in', immediateRender: false }, 0)
+      .fromTo(frame, { borderRadius: () => capsule.offsetHeight / 2 }, { borderRadius: 0, ease: 'power2.in', immediateRender: false }, 0)
       .to(copy, { opacity: 0, scale: 0.94, filter: 'blur(6px)', ease: 'power2.in', duration: 0.6 }, 0)
       .to(cap, { opacity: 1, duration: 0.2 }, 0.8);
     fls.forEach((f) => {
@@ -307,14 +309,14 @@ function peek() {
   rows.addEventListener('pointerleave', () => gsap.to(box, { scale: 0, duration: 0.5, ease: 'expo.in' }));
 }
 
-/* ---------- Carnet : anneau 3D (rotation lente, élan au scroll, glisser à la main) ---------- */
+/* ---------- Carnet : anneau 3D (rotation lente, élan au scroll, glisser ou swiper) ---------- */
 function ring() {
   const stage = $('[data-ring-stage]'), el = $('[data-ring]');
   if (!stage || !el) return;
   const cards = $$('[data-rc]', el);
   const step = 360 / cards.length;
   const readR = () => parseFloat(getComputedStyle(el).getPropertyValue('--R')) || 700;
-  let R = readR(), rot = 0, vel = 0, dragging = false, lastX = 0, moved = 0, visible = false;
+  let R = readR(), rot = 0, vel = 0, dragging = false, lastX = 0, moved = 0, visible = true;
   window.addEventListener('resize', () => { R = readR(); });
 
   const render = () => {
@@ -327,33 +329,51 @@ function ring() {
   };
   render();
 
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(stage);
   gsap.ticker.add(() => {
-    if (!visible) return;
+    if (!visible && !dragging) return;
     if (!dragging) { vel *= 0.94; rot += (reduce ? 0 : 0.05) + vel; }
     render();
   });
   ScrollTrigger.create({
     trigger: stage, start: 'top bottom', end: 'bottom top',
-    onToggle: (st) => { visible = st.isActive; },
     onEnter: () => { if (!reduce) vel = -5; },
     onUpdate: (st) => { if (!dragging && !reduce) vel += gsap.utils.clamp(-0.6, 0.6, st.getVelocity() / -6000); },
   });
 
+  // Glisser à la souris ou au doigt
   stage.addEventListener('pointerdown', (e) => {
-    dragging = true; moved = 0; lastX = e.clientX;
-    stage.classList.add('dragging');
-    stage.setPointerCapture(e.pointerId);
+    if (e.button !== 0) return;
+    if (e.pointerType === 'mouse') e.preventDefault();
+    dragging = true; moved = 0; lastX = e.clientX; vel = 0;
   });
   stage.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const dx = e.clientX - lastX;
     lastX = e.clientX; moved += Math.abs(dx);
-    rot += dx * 0.12; vel = dx * 0.12;
+    if (moved > 4 && !stage.hasPointerCapture(e.pointerId)) { stage.setPointerCapture(e.pointerId); stage.classList.add('dragging'); }
+    rot += dx * 0.14; vel = dx * 0.14;
   });
-  const up = () => { dragging = false; stage.classList.remove('dragging'); };
+  const up = (e: PointerEvent) => {
+    if (!dragging) return;
+    dragging = false; stage.classList.remove('dragging');
+    if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+  };
   stage.addEventListener('pointerup', up);
   stage.addEventListener('pointercancel', up);
+  // Après un glisser, on n'ouvre pas le lien sous le doigt
   stage.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+  stage.addEventListener('dragstart', (e) => e.preventDefault());
+  // Swipe horizontal au trackpad
+  stage.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); vel -= e.deltaX * 0.012; }
+  }, { passive: false });
+  // Clavier : flèches gauche / droite
+  stage.tabIndex = 0;
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') vel += 2.5;
+    if (e.key === 'ArrowRight') vel -= 2.5;
+  });
 }
 
 /* ---------- À propos : tuiles et collage ---------- */

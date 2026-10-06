@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
-import carnet from '../data/carnet.json';
+import carnetAll from '../data/carnet.json';
 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const tc = (s?: number) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
@@ -14,6 +14,9 @@ const totalSeconds = films.reduce((t, f) => t + (f.duration ?? 0), 0);
 
 const slideIds = ['640319308', '1080443990', '917049834', '963161307', '639169921', '640446607', '747356898', '750324854'];
 const slides = slideIds.map((id) => films.find((f) => f.id === id)!).filter(Boolean);
+// Sélection resserrée pour l'anneau du carnet
+const carnetIds = ['27709626', '22535661', '22524804', '22347355', '21546896', '21550008', '21540330', '19647727', '19647336', '18095157', '18085231', '27709620'];
+const carnet = carnetIds.map((id) => carnetAll.find((c) => c.id === id)!).filter(Boolean);
 const pick = (id: string) => projects.find((p) => p.id === id)!;
 const givenchy = pick('maison-givenchy'), jay = pick('lhistoire-de-jay-joy'), gameon = pick('game-on'), loreal = pick('activation-loreal-pro-collage-digital-ia'), arte = pick('arte');
 ---
@@ -149,8 +152,8 @@ const givenchy = pick('maison-givenchy'), jay = pick('lhistoire-de-jay-joy'), ga
 
   <!-- CARNET : anneau 3D qui tourne seul, au scroll et à la main -->
   <section id="carnet" class="carnet" data-ring-section>
-    <div class="ring-stage" data-ring-stage>
-      <div class="ring" data-ring>
+    <div class="ring-stage" data-ring-stage data-cursor="Glisser" aria-label="Carnet : glissez pour faire tourner, ou utilisez les flèches">
+      <div class="ring" data-ring style={`--n:${carnet.length}`}>
         {carnet.map((c, i) => (
           <a class="rc" href={c.url} target="_blank" rel="noopener" style={`--i:${i}`} data-rc data-cursor="Dribbble" draggable="false">
             <img src={c.img} alt={c.title} loading="lazy" draggable="false" />
@@ -230,7 +233,9 @@ const givenchy = pick('maison-givenchy'), jay = pick('lhistoire-de-jay-joy'), ga
   .card-badge { width: 112px; border-radius: 50%; box-shadow: none; }
   .card-badge svg { animation: spin 20s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 1100px) { .fl-g, .fl-h, .fl-d { display: none; } }
+  @media (max-width: 1360px) { .fl-d, .fl-f { display: none; } .fl-h { top: auto; bottom: 5%; right: 21%; } .fl-b { left: 6%; top: 66%; } }
+  @media (max-width: 1100px) { .fl-g, .fl-h { display: none; } }
+  @media (max-height: 760px) and (min-width: 761px) { .fl-c { top: 52%; } .fl-b { top: 62%; } }
   @media (max-width: 760px) {
     .fl-b, .fl-f, .fl-c { display: none; }
     .fl-a { left: -40px; top: 9%; scale: 0.7; } .fl-e { right: -50px; top: auto; bottom: 4%; scale: 0.7; }
@@ -287,13 +292,13 @@ const givenchy = pick('maison-givenchy'), jay = pick('lhistoire-de-jay-joy'), ga
   .carnet { position: relative; margin-top: clamp(100px, 14vw, 200px); overflow: hidden; }
   .ring-stage { position: relative; height: min(92vh, 860px); min-height: 560px; perspective: 1500px; perspective-origin: 50% 10%; cursor: grab; touch-action: pan-y; user-select: none; }
   .ring-stage.dragging { cursor: grabbing; }
-  .ring { --R: 700px; --w: 190px; position: absolute; left: 50%; top: 67%; width: 0; height: 0; transform-style: preserve-3d; }
-  .rc { position: absolute; left: calc(var(--w) / -2); top: calc(var(--w) / -2 - 20px); width: var(--w); transform: rotateY(calc(var(--i) * 15deg)) translateZ(var(--R)); cursor: none; }
+  .ring { --R: 640px; --w: 210px; position: absolute; left: 50%; top: 67%; width: 0; height: 0; transform-style: preserve-3d; }
+  .rc { position: absolute; left: calc(var(--w) / -2); top: calc(var(--w) / -2 - 20px); width: var(--w); transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--R)); cursor: none; }
   .rc img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #fff; box-shadow: 0 30px 50px -30px rgb(29 26 36 / 0.45); pointer-events: none; transition: scale 0.6s var(--ease); }
   .rc:hover img { scale: 1.06; }
   .rc .label { display: block; margin-top: 10px; text-align: center; color: var(--muted); }
   .ring-center { position: absolute; left: 50%; top: 4%; translate: -50% 0; z-index: 2; display: grid; justify-items: center; gap: 12px; text-align: center; pointer-events: none; }
   .ring-center a { pointer-events: auto; }
   .ring-center h2 { font-size: clamp(3.4rem, 9vw, 8.5rem); }
-  @media (max-width: 760px) { .ring { --R: 420px; --w: 130px; } .ring-stage { perspective: 1000px; } }
+  @media (max-width: 760px) { .ring { --R: 380px; --w: 140px; } .ring-stage { perspective: 1000px; } }
 </style>
