@@ -19,11 +19,17 @@ videos:
   - id: "963161307"
     hash: "806bec4b12"
     title: "Sleep apnea"
+    ratio: "16 / 9"
+    duration: 32
   - id: "963176327"
     hash: "79a39bead5"
     title: "A snore way story"
+    ratio: "16 / 9"
+    duration: 32
   - id: "956407813"
     hash: "de1f6c6b1e"
     title: "The snoring device"
+    ratio: "16 / 9"
+    duration: 38
 ---
 Trois films d'animation 2D autour de l'apnée du sommeil et du dispositif anti-ronflement.

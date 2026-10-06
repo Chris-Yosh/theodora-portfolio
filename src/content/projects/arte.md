@@ -20,12 +20,20 @@ images:
   - "/images/projects/arte/08.webp"
 videos:
   - id: "1058257486"
-    title: "Ligne rouge, Arte Podcast"
+    title: "Ligne rouge"
+    ratio: "9 / 16"
+    duration: 51
   - id: "1057899013"
     title: "Alcool, on a un problème"
+    ratio: "9 / 16"
+    duration: 61
   - id: "1057512407"
     title: "Amour"
+    ratio: "9 / 16"
+    duration: 44
   - id: "1057510793"
     title: "Grossesse"
+    ratio: "9 / 16"
+    duration: 51
 ---
 Extraits de podcasts en typographie animée. Je joue des phrases courtes et longues pour garder de la respiration et un rythme de lecture confortable.

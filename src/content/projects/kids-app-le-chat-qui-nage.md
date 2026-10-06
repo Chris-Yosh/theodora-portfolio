@@ -5,7 +5,7 @@ date: 2022-01-13
 year: 2022
 disciplines: ["Application enfants", "Animation de personnages", "Illustration"]
 tools: ["Adobe After Effects", "Adobe Illustrator"]
-color: mint
+color: sage
 featured: false
 behance: "https://www.behance.net/gallery/134377283/Kids-App-Le-chat-qui-nage"
 cover: "/images/projects/kids-app-le-chat-qui-nage/cover.webp"

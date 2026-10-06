@@ -21,5 +21,7 @@ videos:
   - id: "639169921"
     hash: "aee799bfc1"
     title: "Pub - Le Dénicheur, comparateur de prix"
+    ratio: "16 / 9"
+    duration: 15
 ---
 Publicité du comparateur de prix Le Dénicheur.

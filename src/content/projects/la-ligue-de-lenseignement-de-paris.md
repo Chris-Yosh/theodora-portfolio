@@ -18,5 +18,7 @@ images:
 videos:
   - id: "964521788"
     title: "Fédération de la ligue de l'enseignement de Paris"
+    ratio: "16 / 9"
+    duration: 129
 ---
 

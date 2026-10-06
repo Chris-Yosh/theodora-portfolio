@@ -17,5 +17,7 @@ videos:
   - id: "750324854"
     hash: "6c43c2b389"
     title: "Showreel 2022"
+    ratio: "16 / 9"
+    duration: 68
 ---
 Une compilation de 5 ans de travail. Spécialisée en explainer videos : expliquer des concepts complexes à un large public et relier un message à une narration créative.

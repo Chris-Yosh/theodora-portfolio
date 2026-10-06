@@ -14,5 +14,6 @@ videos:
   - id: "1223084041"
     title: "DAB+, la radio"
     ratio: "9 / 16"
+    duration: 71
 ---
 Contenus verticaux pour les réseaux sociaux de la radio numérique DAB+. Projet en cours.

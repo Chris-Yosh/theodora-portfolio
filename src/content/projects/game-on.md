@@ -16,5 +16,6 @@ videos:
   - id: "863101750"
     title: "Loop, Available & Gameboy"
     ratio: "1 / 1"
+    duration: 35
 ---
 Motion design 2D/3D sous Blender et After Effects. Aussi publié sur Dribbble sous le titre « Loop, Available & Gameboy ».

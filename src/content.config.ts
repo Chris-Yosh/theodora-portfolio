@@ -11,13 +11,13 @@ const projects = defineCollection({
     year: z.number(),
     disciplines: z.array(z.string()),
     tools: z.array(z.string()).default([]),
-    color: z.enum(['peach', 'pink', 'butter', 'mint', 'sky', 'lilac']),
+    color: z.enum(['peach', 'pink', 'butter', 'sage', 'sky', 'lilac']),
     featured: z.boolean().default(false),
     behance: z.string().url(),
     cover: z.string(),
     images: z.array(z.string()).default([]),
     videos: z
-      .array(z.object({ id: z.string(), hash: z.string().optional(), title: z.string(), ratio: z.string().default('16 / 9') }))
+      .array(z.object({ id: z.string(), hash: z.string().optional(), title: z.string(), ratio: z.string().default('16 / 9'), duration: z.number().optional() }))
       .default([]),
   }),
 });

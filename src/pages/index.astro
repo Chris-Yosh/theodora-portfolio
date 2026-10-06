@@ -1,145 +1,206 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Doodles from '../components/Doodles.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { site } from '../data/site';
 import carnet from '../data/carnet.json';
 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const heroPicks = ['game-on', 'lhistoire-de-jay-joy', 'arte'].map((id) => projects.find((p) => p.id === id)!);
-const l = site.links;
-const badge = 'explainer videos • illustration • 3D • image par image • ';
+const tc = (s?: number) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
+
+const films = projects.flatMap((p) =>
+  p.data.videos.map((v) => ({ ...v, project: p.id, projectTitle: p.data.title, client: p.data.client, year: p.data.year, tint: p.data.color })),
+);
+const totalSeconds = films.reduce((t, f) => t + (f.duration ?? 0), 0);
+
+const slideIds = ['1057510793', '640319308', '863101750', '1080443990', '917049834', '963161307', '639169921', '750324854'];
+const slides = slideIds.map((id) => films.find((f) => f.id === id)!).filter(Boolean);
+const half = Math.ceil(carnet.length / 2);
+const rows = [carnet.slice(0, half), carnet.slice(half)];
 ---
 <Base>
-  <section class="hero">
-    <Doodles set="hero" />
-    <div class="wrap hero-inner">
-      <p class="eyebrow serif">{site.city} · freelance</p>
-      <h1 data-split="lines">Théodora Ballet</h1>
-      <p class="role">{site.role}</p>
-      <p class="tagline">{site.tagline}</p>
-      <div class="cta">
-        <a class="pill go" href="#travaux">Voir les projets ↓</a>
-        <a class="pill" href={l.malt} target="_blank" rel="noopener">Me contacter</a>
+  <!-- HERO : le nom encadre une fenêtre où défilent les films ; au scroll la fenêtre s'ouvre en plein écran -->
+  <section class="hero" data-hero>
+    <div class="hero-stage">
+      <p class="label hero-l">Directrice artistique<br />& motion designer</p>
+      <p class="label hero-r">Explainer videos · Illustration<br />3D · Animation image par image</p>
+      <h1 class="hero-name">
+        <span class="w1" data-hero-word>Théodora</span>
+        <span class="w2" data-hero-word><em>Ballet</em></span>
+      </h1>
+      <div class="hero-frame" data-hero-frame>
+        <div class="hero-slides" data-slides>
+          {slides.map((s, i) => (
+            <figure class="slide" data-slide data-title={s.projectTitle} data-meta={`${s.client ?? ''}${s.client ? ' · ' : ''}${s.year}`} style={i === 0 ? '' : 'clip-path: inset(100% 0 0 0)'}>
+              <img src={`/images/videos/${s.id}.webp`} alt="" fetchpriority={i === 0 ? 'high' : 'auto'} />
+            </figure>
+          ))}
+        </div>
+        <button class="hero-play" type="button" data-film data-vimeo="750324854" data-hash="6c43c2b389" data-title="Showreel" data-meta="2017 — 2022" data-poster="/images/videos/750324854.webp" data-ratio="16 / 9" data-cursor="Showreel">
+          <span class="sr-only">Lire le showreel</span>
+        </button>
       </div>
-      <div class="floaters" aria-hidden="true">
-        {heroPicks.map((p, i) => (
-          <a class={`float f${i} bg-${p.data.color}`} data-hero-card href={`/projets/${p.id}/`} tabindex="-1">
-            <img src={p.data.cover} alt="" />
-          </a>
-        ))}
+      <div class="hero-cap" aria-live="off">
+        <span class="label muted">À l'écran</span>
+        <span class="cap-t" data-cap-title>{slides[0].projectTitle}</span>
+        <span class="label muted" data-cap-meta>{slides[0].client} · {slides[0].year}</span>
       </div>
-      <svg class="badge" viewBox="0 0 200 200" aria-hidden="true">
-        <circle cx="100" cy="100" r="96" fill="var(--butter)" stroke="var(--ink)" stroke-width="3" />
-        <defs><path id="c" d="M100 100 m-70 0 a70 70 0 1 1 140 0 a70 70 0 1 1 -140 0" /></defs>
-        <text font-family="var(--font-display)" font-size="17" fill="var(--ink)"><textPath href="#c" textLength="436" lengthAdjust="spacing">{badge}</textPath></text>
-        <path d="M100 76 L108 94 L128 96 L113 109 L118 128 L100 118 L82 128 L87 109 L72 96 L92 94 Z" fill="var(--pink)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" />
-      </svg>
+      <p class="hero-scroll label"><span>Défiler</span><i aria-hidden="true"></i></p>
     </div>
   </section>
 
-  <section class="marquee" aria-label="Ils m'ont fait confiance">
-    <div class="track">
-      {[0, 1].map(() => (
-        <ul>{site.clients.map((c) => <li>{c}<span aria-hidden="true">✿</span></li>)}</ul>
+  <!-- MANIFESTE -->
+  <section class="intro wrap">
+    <p class="label muted">Hello</p>
+    <p class="manifesto" data-words>
+      Je conçois et réalise des vidéos qui rendent les idées complexes <em>limpides</em> — du script au storyboard, de l'illustration à l'animation image par image. Pour des marques qui ont une histoire à raconter.
+    </p>
+    <ul class="clients" aria-label="Ils m'ont fait confiance">
+      {site.clients.map((c) => <li>{c}</li>)}
+    </ul>
+  </section>
+
+  <!-- FILMS : galerie horizontale épinglée, ouverture en plein écran au clic -->
+  <section id="films" class="films" data-films>
+    <header class="films-head wrap">
+      <h2>Films</h2>
+      <p class="label muted tnum">{films.length} films · {Math.round(totalSeconds / 60)} minutes d'animation · 2019 — 2026</p>
+    </header>
+    <div class="films-track" data-films-track>
+      {films.map((f) => (
+        <button class={`film t-${f.tint}`} type="button" data-film data-vimeo={f.id} data-hash={f.hash} data-title={f.title} data-meta={`${f.projectTitle}${f.client && f.client !== f.projectTitle ? ' · ' + f.client : ''} · ${f.year}`} data-poster={`/images/videos/${f.id}.webp`} data-ratio={f.ratio} data-cursor="Lire" style={`--ratio:${f.ratio}`}>
+          <span class="film-media">
+            <img src={`/images/videos/${f.id}.webp`} alt="" loading="lazy" decoding="async" data-film-img />
+            <span class="tc tnum">{tc(f.duration)}</span>
+          </span>
+          <span class="film-cap">
+            <span class="film-t">{f.title}</span>
+            <span class="label muted">{f.client ?? f.projectTitle} · {f.year}</span>
+          </span>
+        </button>
       ))}
     </div>
   </section>
 
-  <section id="travaux" class="works">
-    <div class="wrap">
-      <header class="sec-head">
-        <h2 data-reveal>Travaux</h2>
-        <p class="serif" data-reveal>{projects.length} projets, du plus récent au plus ancien</p>
-      </header>
-      <div class="grid">
-        {projects.map((p, i) => <div class="cell"><ProjectCard project={p} index={i} /></div>)}
-      </div>
-    </div>
-  </section>
-
-  <section id="carnet" class="carnet">
-    <Doodles set="soft" />
-    <div class="wrap">
-      <header class="sec-head">
-        <h2 data-reveal>Carnet</h2>
-        <p class="serif" data-reveal>Boucles, essais, dessins — attrapez les stickers</p>
-      </header>
-      <div class="board" data-board>
-        {carnet.map((c, i) => (
-          <a class="sticker" data-drag href={c.url} target="_blank" rel="noopener" style={`--r:${((i * 37) % 13) - 6}deg`} title={c.title}>
-            <img src={c.img} alt={c.title} loading="lazy" draggable="false" />
-            <span>{c.title}</span>
+  <!-- INDEX : tous les projets, aperçu qui suit le curseur -->
+  <section id="index" class="index wrap">
+    <header class="index-head">
+      <h2 data-lines>Tous les <em>projets</em></h2>
+      <p class="label muted tnum">{projects.length} projets</p>
+    </header>
+    <ol class="rows" data-rows>
+      {projects.map((p) => (
+        <li>
+          <a class="row" href={`/projets/${p.id}/`} data-row data-img={p.data.cover} data-cursor="Voir">
+            <span class="r-year label tnum">{p.data.year}</span>
+            <span class="r-title">{p.data.title}</span>
+            <span class="r-client">{p.data.client ?? '—'}</span>
+            <span class="r-disc muted">{p.data.disciplines.slice(0, 2).join(', ')}</span>
+            <span class="r-arrow" aria-hidden="true">→</span>
           </a>
-        ))}
-      </div>
-      <p class="more"><a class="pill" href={l.dribbble} target="_blank" rel="noopener">Tout voir sur Dribbble ↗</a></p>
-    </div>
+        </li>
+      ))}
+    </ol>
+    <div class="peek" aria-hidden="true" data-peek><img alt="" data-peek-img /></div>
   </section>
 
-  <section id="a-propos" class="about">
-    <div class="wrap about-grid">
-      <h2 data-reveal>Hello, <span class="serif">c'est moi</span></h2>
-      <div data-reveal>
-        <p class="lead">Directrice artistique et motion designer, je suis spécialisée dans la conception et la production de vidéos explicatives.</p>
-        <p>De votre script, du moodboard et de l'élaboration du storyboard jusqu'à la production vidéo et d'illustrations, je vous accompagne à chaque étape de votre projet créatif.</p>
-        <ul class="services">
-          <li>Publicité TV</li>
-          <li>Vidéo explicative et institutionnelle</li>
-          <li>Bibliothèque d'assets d'animation 2D</li>
-        </ul>
+  <!-- CARNET -->
+  <section id="carnet" class="carnet">
+    <header class="wrap carnet-head">
+      <h2 data-lines>Carnet</h2>
+      <p class="muted">Boucles, essais et dessins publiés sur <a class="ulink" href={site.links.dribbble} target="_blank" rel="noopener">Dribbble</a>.</p>
+    </header>
+    {rows.map((row, r) => (
+      <div class="marquee" data-marquee={r % 2 ? 'right' : 'left'}>
+        <div class="m-track">
+          {[0, 1].map((dup) => row.map((c) => (
+            <a class="shot" href={c.url} target="_blank" rel="noopener" tabindex={dup ? -1 : 0} aria-hidden={dup ? 'true' : undefined} data-cursor="Dribbble">
+              <img src={c.img} alt={dup ? '' : c.title} loading="lazy" />
+              <span class="label">{c.title}</span>
+            </a>
+          )))}
+        </div>
       </div>
-    </div>
+    ))}
   </section>
 </Base>
 
 <style>
-  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; padding: 120px 0 80px; overflow: clip; background: radial-gradient(circle at 15% 20%, var(--pink) 0, transparent 40%), radial-gradient(circle at 85% 75%, var(--sky) 0, transparent 45%), var(--cream); }
-  .hero-inner { position: relative; z-index: 1; width: 100%; }
-  .eyebrow { margin: 0 0 8px; font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
-  h1 { font-size: clamp(3.4rem, 12.5vw, 12rem); line-height: .93; }
-  .role { margin: 18px 0 0; font: 400 clamp(1.5rem, 4vw, 3rem)/1.05 var(--font-serif); font-style: italic; }
-  .tagline { max-width: 34ch; margin: 18px 0 0; font-size: 1.2rem; }
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-  .go { background: var(--butter); }
-  .floaters { position: absolute; right: 0; top: -60px; width: min(40vw, 520px); aspect-ratio: 1; pointer-events: none; }
-  .float { position: absolute; width: 56%; aspect-ratio: 4 / 3; border: 3px solid var(--ink); border-radius: 22px; overflow: hidden; box-shadow: 7px 7px 0 var(--ink); pointer-events: auto; }
-  .float img { width: 100%; height: 100%; object-fit: cover; }
-  .f0 { right: 0; top: 4%; transform: rotate(6deg); }
-  .f1 { left: 0; top: 36%; transform: rotate(-7deg); z-index: 2; }
-  .f2 { right: 6%; bottom: -4%; transform: rotate(3deg); }
-  .badge { position: absolute; right: clamp(0px, 4vw, 40px); bottom: -60px; width: clamp(110px, 14vw, 170px); animation: spin 18s linear infinite; z-index: 3; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 900px) { .floaters { position: relative; width: 100%; max-width: 420px; margin: 40px auto 0; top: 0; } .badge { bottom: auto; top: -8px; right: 0; width: 92px; } }
+  /* HERO */
+  .hero { position: relative; height: 100svh; min-height: 640px; }
+  .hero-stage { position: relative; height: 100svh; min-height: 640px; overflow: hidden; padding: 0 var(--gutter); background: var(--paper); isolation: isolate; }
+  .hero-l, .hero-r { position: absolute; top: 96px; line-height: 1.7; }
+  .hero-l { left: var(--gutter); } .hero-r { right: var(--gutter); text-align: right; }
+  .hero-name { position: absolute; inset: 0; z-index: 3; color: #fff; mix-blend-mode: difference; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--gutter); font-size: clamp(4.6rem, 17.5vw, 20rem); line-height: 0.8; pointer-events: none; }
+  .hero-name span { display: block; will-change: transform; }
+  .w2 { align-self: flex-end; }
+  .hero-frame { position: absolute; z-index: 2; left: 50%; top: 50%; width: clamp(220px, 25vw, 400px); aspect-ratio: 4 / 5; translate: -50% -50%; border-radius: var(--radius); overflow: hidden; background: var(--lilac); will-change: transform; }
+  .slide { position: absolute; inset: 0; margin: 0; }
+  .slide img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-play { position: absolute; inset: 0; z-index: 2; cursor: none; }
+  .hero-cap { position: absolute; left: var(--gutter); bottom: 32px; display: grid; gap: 4px; }
+  .cap-t { font: 1.7rem/1.1 var(--serif); }
+  .hero-scroll { position: absolute; right: var(--gutter); bottom: 32px; display: flex; align-items: center; gap: 12px; }
+  .hero-scroll i { width: 48px; height: 1px; background: var(--ink); transform-origin: left; animation: line 2.2s var(--ease) infinite; }
+  @keyframes line { 0% { transform: scaleX(0); } 60% { transform: scaleX(1); transform-origin: left; } 61% { transform-origin: right; } 100% { transform: scaleX(0); transform-origin: right; } }
+  @media (max-width: 760px) {
+    .hero-r { display: none; }
+    .hero-name { justify-content: space-between; padding-block: 160px 130px; }
+    .hero-frame { width: 52vw; }
+  }
 
-  .marquee { overflow: hidden; background: var(--ink); color: var(--cream); border-block: 3px solid var(--ink); transform: rotate(-1.2deg); margin: -10px -2vw 0; }
-  .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
-  .marquee ul { display: flex; gap: 0; list-style: none; margin: 0; padding: 16px 0; }
-  .marquee li { font: 1.8rem/1 var(--font-display); padding-inline: 28px; white-space: nowrap; }
-  .marquee li span { margin-left: 56px; color: var(--pink); }
-  @keyframes slide { to { transform: translateX(-50%); } }
+  /* MANIFESTE */
+  .intro { padding-block: clamp(120px, 16vw, 220px) 0; display: grid; gap: 28px; }
+  .manifesto { font: 400 clamp(2rem, 4.6vw, 4.4rem)/1.08 var(--serif); letter-spacing: -0.015em; max-width: 22ch; text-wrap: pretty; }
+  .clients { display: flex; flex-wrap: wrap; gap: 6px 0; list-style: none; padding: 0; margin: clamp(40px, 6vw, 80px) 0 0; border-top: 1px solid var(--line); padding-top: 24px; max-width: 980px; }
+  .clients li { font-size: 0.95rem; color: var(--muted); }
+  .clients li:not(:last-child)::after { content: '·'; margin-inline: 14px; opacity: 0.6; }
 
-  .works, .carnet, .about { position: relative; padding-top: clamp(80px, 12vw, 160px); }
-  .sec-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: clamp(32px, 6vw, 72px); }
-  .sec-head h2 { font-size: clamp(3rem, 10vw, 8rem); }
-  .sec-head p { margin: 0; font-size: 1.3rem; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 5vw, 72px) clamp(24px, 4vw, 56px); }
-  .cell:nth-child(even) { margin-top: clamp(40px, 8vw, 120px); }
-  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .cell:nth-child(even) { margin-top: 0; } }
+  /* FILMS */
+  .films { position: relative; margin-top: clamp(120px, 16vw, 220px); }
+  @media (min-width: 900px) { .films { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; } }
+  .films-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: clamp(24px, 3vh, 40px); }
+  .films-head h2 { font-size: clamp(4rem, 9vw, 9rem); }
+  .films-track { display: flex; align-items: flex-start; gap: clamp(16px, 2.2vw, 32px); padding-inline: var(--gutter); width: max-content; will-change: transform; }
+  .film { flex: none; text-align: left; cursor: none; }
+  .film-media { position: relative; display: block; height: min(50vh, 520px); aspect-ratio: var(--ratio); overflow: hidden; border-radius: var(--radius); background: var(--tint); }
+  .film-media img { width: 100%; height: 100%; object-fit: cover; scale: 1.18; transition: filter 0.8s var(--ease); }
+  .film:hover .film-media img { filter: saturate(1.15); }
+  .tc { position: absolute; left: 12px; bottom: 12px; padding: 4px 9px; border-radius: 999px; background: rgb(29 26 36 / 0.55); color: #fff; font-size: 0.72rem; backdrop-filter: blur(6px); }
+  .film-cap { display: grid; gap: 6px; padding-top: 16px; max-width: 34ch; }
+  .film-t { font: 1.6rem/1.05 var(--serif); }
+  @media (max-width: 899px) {
+    .films-track { width: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: none; }
+    .film { scroll-snap-align: start; }
+    .film-media { height: 46vh; }
+  }
 
-  .carnet { overflow: clip; }
-  .board { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; padding: 24px 0; }
-  .sticker { position: relative; z-index: 1; width: clamp(130px, 18vw, 230px); background: #fff; padding: 10px 10px 8px; border: 3px solid var(--ink); border-radius: 18px; transform: rotate(var(--r)); text-decoration: none; box-shadow: 5px 5px 0 var(--ink); cursor: grab; touch-action: none; }
-  .sticker img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; user-select: none; }
-  .sticker span { display: block; margin-top: 6px; font: .85rem/1.2 var(--font-display); text-align: center; }
-  .more { text-align: center; margin-top: 36px; }
+  /* INDEX */
+  .index { position: relative; padding-top: clamp(140px, 18vw, 260px); }
+  .index-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 36px; }
+  .index-head h2 { font-size: clamp(3.4rem, 9vw, 9rem); }
+  .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .rows li { border-bottom: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 70px minmax(0, 2.2fr) minmax(0, 1fr) minmax(0, 1.3fr) 28px; align-items: baseline; gap: 20px; padding: 22px 0; cursor: none; transition: opacity 0.5s var(--ease), padding 0.6s var(--ease); }
+  .r-title { font: clamp(1.7rem, 3.2vw, 2.9rem)/1 var(--serif); }
+  .r-client { font-size: 0.95rem; }
+  .r-disc { font-size: 0.9rem; }
+  .r-arrow { transition: transform 0.6s var(--ease); }
+  .rows:hover .row { opacity: 0.35; }
+  .rows .row:hover { opacity: 1; padding-left: 14px; }
+  .row:hover .r-arrow { transform: translateX(8px); }
+  @media (max-width: 760px) { .row { grid-template-columns: 52px minmax(0, 1fr) 20px; } .r-client, .r-disc { display: none; } }
+  .peek { position: fixed; z-index: 30; top: 0; left: 0; width: 320px; aspect-ratio: 4 / 3; margin: -110px 0 0 48px; border-radius: var(--radius); overflow: hidden; pointer-events: none; scale: 0; }
+  .peek img { width: 100%; height: 100%; object-fit: cover; }
+  @media (hover: none) { .peek { display: none; } }
 
-  .about { padding-bottom: 40px; }
-  .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(24px, 6vw, 96px); align-items: start; }
-  .about h2 { font-size: clamp(3rem, 8vw, 6.5rem); }
-  .lead { font: 400 clamp(1.4rem, 2.6vw, 2rem)/1.25 var(--font-serif); margin-top: 0; }
-  .services { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 28px 0 0; }
-  .services li { background: var(--mint); border: 2.5px solid var(--ink); border-radius: 999px; padding: .4em 1em; font-weight: 700; }
-  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } }
+  /* CARNET */
+  .carnet { padding-top: clamp(140px, 18vw, 260px); overflow: hidden; }
+  .carnet-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
+  .carnet-head h2 { font-size: clamp(3.4rem, 9vw, 9rem); }
+  .marquee + .marquee { margin-top: 18px; }
+  .m-track { display: flex; gap: 18px; width: max-content; }
+  .shot { flex: none; width: clamp(180px, 19vw, 280px); cursor: none; }
+  .shot img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); background: #fff; transition: transform 0.8s var(--ease); }
+  .shot:hover img { transform: scale(0.96); }
+  .shot .label { display: block; margin-top: 10px; color: var(--muted); }
 </style>

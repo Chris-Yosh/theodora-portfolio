@@ -22,5 +22,7 @@ videos:
   - id: "747356898"
     hash: "bf5a5d72d3"
     title: "Synergee"
+    ratio: "16 / 9"
+    duration: 20
 ---
 15 vidéos avec des deadlines très serrées : un style visuel simplifié, mais des personnages animés fluides et expressifs pour transmettre l'émotion.

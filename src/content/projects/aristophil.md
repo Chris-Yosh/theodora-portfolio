@@ -21,5 +21,7 @@ videos:
   - id: "640446607"
     hash: "299ef29a75"
     title: "Aristophil"
+    ratio: "16 / 9"
+    duration: 180
 ---
 

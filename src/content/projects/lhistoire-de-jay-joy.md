@@ -18,5 +18,7 @@ images:
 videos:
   - id: "917049834"
     title: "Jay&Joy, L'alternative au fromage"
+    ratio: "16 / 9"
+    duration: 175
 ---
 L'alternative au fromage racontée en animation 2D.

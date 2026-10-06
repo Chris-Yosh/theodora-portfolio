@@ -1,78 +1,111 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import VideoFacade from '../../components/VideoFacade.astro';
-import Doodles from '../../components/Doodles.astro';
 
 export async function getStaticPaths() {
   const all = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  return all.map((project, i) => ({
-    params: { slug: project.id },
-    props: { project, next: all[(i + 1) % all.length] },
-  }));
+  return all.map((project, i) => ({ params: { slug: project.id }, props: { project, next: all[(i + 1) % all.length] } }));
 }
 const { project, next } = Astro.props;
 const { Content } = await render(project);
 const d = project.data;
+const tc = (s?: number) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
+const [lead, ...more] = d.videos;
+const meta = (v: { title: string }) => `${d.title}${d.client && d.client !== d.title ? ' · ' + d.client : ''} · ${d.year}`;
 ---
 <Base title={d.title} image={d.cover} description={`${d.title}${d.client ? ` pour ${d.client}` : ''} — ${d.disciplines.join(', ')}.`}>
-  <article>
-    <header class={`head bg-${d.color}`}>
-      <Doodles set="soft" />
-      <div class="wrap">
-        <a class="back pill" href="/#travaux">← Tous les projets</a>
-        <h1 data-split>{d.title}</h1>
-        <dl>
-          {d.client && <div><dt>Client</dt><dd>{d.client}</dd></div>}
-          <div><dt>Année</dt><dd>{d.year}</dd></div>
-          <div><dt>Discipline</dt><dd>{d.disciplines.join(' · ')}</dd></div>
-          {d.tools.length > 0 && <div><dt>Outils</dt><dd>{d.tools.join(' · ').replaceAll('Adobe ', '')}</dd></div>}
-        </dl>
-      </div>
+  <article class={`t-${d.color}`}>
+    <header class="head wrap">
+      <a class="back label ulink reverse" href="/#index" data-fade>← Tous les projets</a>
+      <h1 data-project-title>{d.title}</h1>
+      <dl class="facts">
+        {d.client && <div data-fade><dt class="label muted">Client</dt><dd>{d.client}</dd></div>}
+        <div data-fade><dt class="label muted">Année</dt><dd class="tnum">{d.year}</dd></div>
+        <div data-fade><dt class="label muted">Discipline</dt><dd>{d.disciplines.join(', ')}</dd></div>
+        {d.tools.length > 0 && <div data-fade><dt class="label muted">Outils</dt><dd>{d.tools.map((t) => t.replace('Adobe ', '')).join(', ')}</dd></div>}
+        {d.videos.length > 0 && <div data-fade><dt class="label muted">Films</dt><dd class="tnum">{d.videos.length}</dd></div>}
+      </dl>
     </header>
 
+    {lead ? (
+      <div class="wrap">
+        <button class="lead" type="button" data-film data-vimeo={lead.id} data-hash={lead.hash} data-title={lead.title} data-meta={meta(lead)} data-poster={`/images/videos/${lead.id}.webp`} data-ratio={lead.ratio} data-cursor="Lire" style={`--ratio:${lead.ratio}`}>
+          <span class="film-media lead-media" data-reveal>
+            <img src={`/images/videos/${lead.id}.webp`} alt="" />
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>
+          </span>
+          <span class="cap"><span class="it">{lead.title}</span><span class="label muted tnum">{tc(lead.duration)}</span></span>
+        </button>
+      </div>
+    ) : (
+      <div class="wrap"><div class="lead-media still" data-reveal><img src={d.images[0] ?? d.cover} alt="" /></div></div>
+    )}
+
     <div class="wrap body">
-      <div class="text serif" data-reveal><Content /></div>
-
-      {d.videos.length > 0 && (
-        <div class="videos">
-          {d.videos.map((v) => <div data-reveal><VideoFacade id={v.id} hash={v.hash} title={v.title} poster={d.cover} ratio={v.ratio} /></div>)}
-        </div>
-      )}
-
-      {d.images.length > 0 && (
-        <div class="shots">
-          {d.images.map((src) => <img data-reveal src={src} alt="" loading="lazy" decoding="async" />)}
-        </div>
-      )}
-
-      <p class="ext"><a class="pill" href={d.behance} target="_blank" rel="noopener">Voir sur Behance ↗</a></p>
+      <div class="text"><Content /></div>
+      <a class="label ulink" href={d.behance} target="_blank" rel="noopener">Le projet complet sur Behance ↗</a>
     </div>
 
-    <a class={`next bg-${next.data.color}`} href={`/projets/${next.id}/`}>
-      <span class="serif">Projet suivant</span>
-      <strong>{next.data.title} →</strong>
+    {more.length > 0 && (
+      <div class="wrap more">
+        {more.map((v) => (
+          <button class="film" type="button" data-film data-vimeo={v.id} data-hash={v.hash} data-title={v.title} data-meta={meta(v)} data-poster={`/images/videos/${v.id}.webp`} data-ratio={v.ratio} data-cursor="Lire" style={`--ratio:${v.ratio}`}>
+            <span class="film-media" data-reveal><img src={`/images/videos/${v.id}.webp`} alt="" loading="lazy" /></span>
+            <span class="cap"><span class="it">{v.title}</span><span class="label muted tnum">{tc(v.duration)}</span></span>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {d.images.length > 0 && (
+      <div class="wrap shots">
+        {d.images.map((src, i) => <figure class={`shot s${i % 3}`} data-reveal><img src={src} alt="" loading="lazy" decoding="async" /></figure>)}
+      </div>
+    )}
+
+    <a class={`next t-${next.data.color}`} href={`/projets/${next.id}/`} data-cursor="Suivant">
+      <span class="label">Projet suivant</span>
+      <span class="next-t">{next.data.title}</span>
+      <img src={next.data.cover} alt="" loading="lazy" />
     </a>
   </article>
 </Base>
 
 <style>
-  .head { position: relative; overflow: clip; background: var(--bg); padding: 140px 0 clamp(48px, 8vw, 96px); border-bottom: 3px solid var(--ink); border-radius: 0 0 var(--radius) var(--radius); }
-  .head .wrap { position: relative; z-index: 1; }
-  .back { margin-bottom: 28px; }
-  h1 { font-size: clamp(3rem, 11vw, 9rem); }
-  dl { display: flex; flex-wrap: wrap; gap: 14px 48px; margin: 36px 0 0; }
-  dt { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; opacity: .7; }
-  dd { margin: 2px 0 0; font-weight: 500; font-size: 1.1rem; }
-  .body { padding-top: clamp(40px, 7vw, 88px); display: grid; gap: clamp(40px, 7vw, 88px); }
-  .text { max-width: 46ch; font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.3; }
+  article { --tint: var(--lilac); }
+  .head { padding-block: 120px clamp(48px, 7vw, 96px); }
+  .back { display: inline-block; margin-bottom: clamp(32px, 6vw, 72px); }
+  h1 { font-size: clamp(3.6rem, 12vw, 13rem); max-width: 14ch; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; margin: clamp(40px, 6vw, 72px) 0 0; padding-top: 22px; border-top: 1px solid var(--line); }
+  dd { margin: 8px 0 0; }
+
+  .lead, .film { display: block; width: 100%; text-align: left; cursor: none; }
+  .film-media, .lead-media { position: relative; display: block; overflow: hidden; border-radius: var(--radius); background: var(--tint); aspect-ratio: var(--ratio, 16 / 9); }
+  .lead-media { max-height: 86vh; margin-inline: auto; }
+  .lead[style*="9 / 16"] .lead-media { width: min(100%, 460px); }
+  .lead-media img, .film-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .lead:hover img, .film:hover img { transform: scale(1.04); }
+  .still { aspect-ratio: 16 / 9; }
+  .play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 84px; height: 84px; display: grid; place-items: center; border-radius: 50%; background: var(--paper); color: var(--ink); transition: scale 0.6s var(--ease); }
+  .lead:hover .play { scale: 1.12; }
+  .cap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 14px; font-size: 1.4rem; }
+
+  .body { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 32px; padding-block: clamp(56px, 8vw, 120px); }
+  .text { font: 400 clamp(1.6rem, 3vw, 2.6rem)/1.15 var(--serif); max-width: 28ch; }
   .text :global(p) { margin: 0; }
-  .videos { display: grid; gap: clamp(32px, 5vw, 64px); justify-items: start; }
-  .videos > :global(div:not(:has(.vertical))) { width: 100%; }
-  .shots { display: grid; gap: clamp(16px, 3vw, 36px); }
-  .shots img { width: 100%; height: auto; border: 3px solid var(--ink); border-radius: var(--radius); background: #fff; }
-  .next { display: block; margin-top: clamp(64px, 10vw, 140px); padding: clamp(48px, 9vw, 120px) var(--gutter); background: var(--bg, var(--peach)); border-block: 3px solid var(--ink); text-decoration: none; transition: filter .3s; }
-  .next:hover { filter: saturate(1.4) brightness(.97); }
-  .next span { display: block; font-size: 1.4rem; }
-  .next strong { font: clamp(2.4rem, 9vw, 7rem)/1 var(--font-display); font-weight: 400; }
+  @media (max-width: 760px) { .body { grid-template-columns: 1fr; } }
+
+  .more { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(20px, 3vw, 40px); align-items: start; padding-bottom: clamp(56px, 8vw, 120px); }
+
+  .shots { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 28px); }
+  .shot { margin: 0; overflow: hidden; border-radius: var(--radius); background: var(--tint); }
+  .shot img { width: 100%; height: auto; }
+  .s0 { grid-column: 1 / -1; }
+  .s1 { grid-column: 1 / 7; } .s2 { grid-column: 7 / -1; }
+  @media (max-width: 760px) { .shot { grid-column: 1 / -1 !important; } }
+
+  .next { position: relative; display: grid; gap: 14px; margin-top: clamp(100px, 14vw, 200px); padding: clamp(64px, 10vw, 140px) var(--gutter); background: var(--tint); overflow: hidden; cursor: none; }
+  .next-t { font: clamp(3rem, 10vw, 10rem)/0.9 var(--serif); letter-spacing: -0.02em; position: relative; z-index: 1; }
+  .next img { position: absolute; right: var(--gutter); top: 50%; width: clamp(160px, 22vw, 320px); aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); translate: 0 -50%; rotate: 4deg; scale: 0.85; opacity: 0; transition: all 0.9s var(--ease); }
+  .next:hover img { scale: 1; opacity: 1; rotate: -2deg; }
 </style>
