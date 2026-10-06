@@ -12,39 +12,83 @@ const films = projects.flatMap((p) =>
 );
 const totalSeconds = films.reduce((t, f) => t + (f.duration ?? 0), 0);
 
-const slideIds = ['1057510793', '640319308', '863101750', '1080443990', '917049834', '963161307', '639169921', '750324854'];
+const slideIds = ['640319308', '1080443990', '917049834', '963161307', '639169921', '640446607', '747356898', '750324854'];
 const slides = slideIds.map((id) => films.find((f) => f.id === id)!).filter(Boolean);
-const half = Math.ceil(carnet.length / 2);
-const rows = [carnet.slice(0, half), carnet.slice(half)];
+const pick = (id: string) => projects.find((p) => p.id === id)!;
+const givenchy = pick('maison-givenchy'), jay = pick('lhistoire-de-jay-joy'), gameon = pick('game-on'), loreal = pick('activation-loreal-pro-collage-digital-ia'), arte = pick('arte');
 ---
 <Base>
-  <!-- HERO : le nom encadre une fenêtre où défilent les films ; au scroll la fenêtre s'ouvre en plein écran -->
+  <!-- HERO : une phrase en grande serif, une capsule vidéo glissée dans la phrase, des cartes projets qui flottent autour.
+       Au scroll, les cartes s'envolent et la capsule s'ouvre en plein écran. -->
   <section class="hero" data-hero>
-    <div class="hero-stage">
-      <p class="label hero-l">Directrice artistique<br />& motion designer</p>
-      <p class="label hero-r">Explainer videos · Illustration<br />3D · Animation image par image</p>
-      <h1 class="hero-name">
-        <span class="w1" data-hero-word>Théodora</span>
-        <span class="w2" data-hero-word><em>Ballet</em></span>
-      </h1>
-      <div class="hero-frame" data-hero-frame>
-        <div class="hero-slides" data-slides>
-          {slides.map((s, i) => (
-            <figure class="slide" data-slide data-title={s.projectTitle} data-meta={`${s.client ?? ''}${s.client ? ' · ' : ''}${s.year}`} style={i === 0 ? '' : 'clip-path: inset(100% 0 0 0)'}>
-              <img src={`/images/videos/${s.id}.webp`} alt="" fetchpriority={i === 0 ? 'high' : 'auto'} />
-            </figure>
-          ))}
+    <div class="hero-stage" data-hero-stage>
+      <div class="floaters" aria-hidden="true">
+        <a class="fl fl-a" href={`/projets/${givenchy.id}/`} tabindex="-1" data-fl data-depth="0.9"><span class="fl-p"><span class="fl-card card-proj t-pink" style="--r:-7deg">
+          <span class="cp-t">{givenchy.data.title}</span>
+          <span class="cp-s">Rétrospective de bijoux, en collage animé.</span>
+          <img src={givenchy.data.cover} alt="" />
+        </span></span></a>
+        <a class="fl fl-b" href={`/projets/${arte.id}/`} tabindex="-1" data-fl data-depth="0.5"><span class="fl-p"><span class="fl-card card-ui" style="--r:4deg">
+          <span class="ui-k">En lecture</span>
+          <span class="ui-t">ARTE · Podcasts</span>
+          <span class="ui-bar"><i></i></span>
+          <span class="ui-row"><span>0:51</span><span>4 vidéos</span></span>
+        </span></span></a>
+        <a class="fl fl-c" href={`/projets/${gameon.id}/`} tabindex="-1" data-fl data-depth="1.2"><span class="fl-p"><span class="fl-card card-photo" style="--r:8deg">
+          <img src={gameon.data.cover} alt="" />
+        </span></span></a>
+        <span class="fl fl-d" data-fl data-depth="0.7"><span class="fl-p"><span class="fl-card card-pills" style="--r:-3deg">
+          <span class="pill-s t-sky">Explainer video</span>
+          <span class="pill-s t-butter">Illustration</span>
+          <span class="pill-s t-lilac">3D</span>
+          <span class="pill-s t-sage">Image par image</span>
+        </span></span></span>
+        <a class="fl fl-e" href={`/projets/${jay.id}/`} tabindex="-1" data-fl data-depth="1"><span class="fl-p"><span class="fl-card card-proj t-butter" style="--r:6deg">
+          <span class="cp-t">{jay.data.title}</span>
+          <span class="cp-s">L'alternative au fromage, en explainer.</span>
+          <img src={jay.data.cover} alt="" />
+        </span></span></a>
+        <span class="fl fl-f" data-fl data-depth="0.6"><span class="fl-p"><span class="fl-card card-hello" style="--r:-4deg">
+          <img src="/images/theodora.webp" alt="" />
+          <span><b>Théodora</b><span>Hello ! On raconte quoi aujourd'hui ?</span></span>
+        </span></span></span>
+        <a class="fl fl-g" href={`/projets/${loreal.id}/`} tabindex="-1" data-fl data-depth="0.8"><span class="fl-p"><span class="fl-card card-done" style="--r:-6deg">
+          <span class="ui-k">Collage digital</span>
+          <span class="cd-t">L'Oréal Pro</span>
+          <span class="cd-ok"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 12.5l4.2 4L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+        </span></span></a>
+        <span class="fl fl-h" data-fl data-depth="1.1"><span class="fl-p"><span class="fl-card card-badge">
+          <svg viewBox="0 0 200 200"><defs><path id="bc" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0" /></defs>
+            <circle cx="100" cy="100" r="98" fill="var(--sky)" />
+            <text font-family="var(--sans)" font-size="15" letter-spacing="3" fill="var(--ink)"><textPath href="#bc" textLength="460" lengthAdjust="spacing">FREELANCE · PARIS · MOTION DESIGN · </textPath></text>
+            <path d="M100 66 C 104 92, 108 96, 134 100 C 108 104, 104 108, 100 134 C 96 108, 92 104, 66 100 C 92 96, 96 92, 100 66 Z" fill="var(--ink)" />
+          </svg>
+        </span></span></span>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow label" data-hero-fade>Théodora Ballet — Directrice artistique & motion designer</p>
+        <h1 class="hl">
+          <span class="hl-line" data-hl-line>Je donne <em class="mark"><span class="mark-bg" data-mark></span><span class="mark-t">vie</span><svg class="sparks" viewBox="0 0 80 40" aria-hidden="true"><path d="M14 30 L6 14 M30 22 L28 4 M46 24 L56 8" data-draw /></svg></em></span>
+          <span class="hl-line" data-hl-line>à vos <span class="capsule" data-capsule aria-hidden="true"></span> idées<span class="dot">.</span><svg class="squiggle" viewBox="0 0 300 30" aria-hidden="true"><path d="M4 18 C 40 4, 70 28, 108 14 S 176 6, 214 18 S 270 24, 296 10" data-draw /></svg></span>
+        </h1>
+        <p class="sub" data-hero-fade>Explainer videos, illustration, 3D et animation image par image pour ARTE, L'Oréal, Givenchy et bien d'autres.</p>
+        <div class="ctas" data-hero-fade>
+          <a class="btn btn-ink" href="#realisations">Voir les réalisations</a>
+          <button class="btn btn-play" type="button" data-film data-vimeo="750324854" data-hash="6c43c2b389" data-title="Showreel" data-meta="2017 — 2022" data-poster="/images/videos/750324854.webp" data-ratio="16 / 9">
+            <span class="play-dot" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></span>Showreel
+          </button>
         </div>
-        <button class="hero-play" type="button" data-film data-vimeo="750324854" data-hash="6c43c2b389" data-title="Showreel" data-meta="2017 — 2022" data-poster="/images/videos/750324854.webp" data-ratio="16 / 9" data-cursor="Showreel">
-          <span class="sr-only">Lire le showreel</span>
-        </button>
       </div>
-      <div class="hero-cap" aria-live="off">
-        <span class="label muted">À l'écran</span>
-        <span class="cap-t" data-cap-title>{slides[0].projectTitle}</span>
-        <span class="label muted" data-cap-meta>{slides[0].client} · {slides[0].year}</span>
+
+      <div class="hero-frame" data-hero-frame>
+        {slides.map((s, i) => (
+          <figure class="slide" data-slide data-title={s.projectTitle} style={i === 0 ? '' : 'clip-path: inset(100% 0 0 0)'}>
+            <img src={`/images/videos/${s.id}.webp`} alt="" fetchpriority={i === 0 ? 'high' : 'auto'} />
+          </figure>
+        ))}
+        <span class="frame-cap label" data-frame-cap>{slides[0].projectTitle}</span>
       </div>
-      <p class="hero-scroll label"><span>Défiler</span><i aria-hidden="true"></i></p>
     </div>
   </section>
 
@@ -59,11 +103,11 @@ const rows = [carnet.slice(0, half), carnet.slice(half)];
     </ul>
   </section>
 
-  <!-- FILMS : galerie horizontale épinglée, ouverture en plein écran au clic -->
-  <section id="films" class="films" data-films>
+  <!-- RÉALISATIONS : galerie horizontale épinglée, ouverture en plein écran au clic -->
+  <section id="realisations" class="films" data-films>
     <header class="films-head wrap">
-      <h2>Films</h2>
-      <p class="label muted tnum">{films.length} films · {Math.round(totalSeconds / 60)} minutes d'animation · 2019 — 2026</p>
+      <h2 data-lines>Réalisations</h2>
+      <p class="label muted tnum">{films.length} réalisations · {Math.round(totalSeconds / 60)} minutes d'animation · 2019 — 2026</p>
     </header>
     <div class="films-track" data-films-track>
       {films.map((f) => (
@@ -103,49 +147,95 @@ const rows = [carnet.slice(0, half), carnet.slice(half)];
     <div class="peek" aria-hidden="true" data-peek><img alt="" data-peek-img /></div>
   </section>
 
-  <!-- CARNET -->
-  <section id="carnet" class="carnet">
-    <header class="wrap carnet-head">
-      <h2 data-lines>Carnet</h2>
-      <p class="muted">Boucles, essais et dessins publiés sur <a class="ulink" href={site.links.dribbble} target="_blank" rel="noopener">Dribbble</a>.</p>
-    </header>
-    {rows.map((row, r) => (
-      <div class="marquee" data-marquee={r % 2 ? 'right' : 'left'}>
-        <div class="m-track">
-          {[0, 1].map((dup) => row.map((c) => (
-            <a class="shot" href={c.url} target="_blank" rel="noopener" tabindex={dup ? -1 : 0} aria-hidden={dup ? 'true' : undefined} data-cursor="Dribbble">
-              <img src={c.img} alt={dup ? '' : c.title} loading="lazy" />
-              <span class="label">{c.title}</span>
-            </a>
-          )))}
-        </div>
+  <!-- CARNET : anneau 3D qui tourne seul, au scroll et à la main -->
+  <section id="carnet" class="carnet" data-ring-section>
+    <div class="ring-stage" data-ring-stage>
+      <div class="ring" data-ring>
+        {carnet.map((c, i) => (
+          <a class="rc" href={c.url} target="_blank" rel="noopener" style={`--i:${i}`} data-rc data-cursor="Dribbble" draggable="false">
+            <img src={c.img} alt={c.title} loading="lazy" draggable="false" />
+            <span class="label">{c.title}</span>
+          </a>
+        ))}
       </div>
-    ))}
+      <div class="ring-center">
+        <h2 data-lines>Carnet</h2>
+        <p class="muted">Boucles, essais et dessins. <span class="it">Faites tourner.</span></p>
+        <a class="label ulink" href={site.links.dribbble} target="_blank" rel="noopener">Tout le carnet sur Dribbble ↗</a>
+      </div>
+    </div>
   </section>
 </Base>
 
 <style>
   /* HERO */
-  .hero { position: relative; height: 100svh; min-height: 640px; }
-  .hero-stage { position: relative; height: 100svh; min-height: 640px; overflow: hidden; padding: 0 var(--gutter); background: var(--paper); isolation: isolate; }
-  .hero-l, .hero-r { position: absolute; top: 96px; line-height: 1.7; }
-  .hero-l { left: var(--gutter); } .hero-r { right: var(--gutter); text-align: right; }
-  .hero-name { position: absolute; inset: 0; z-index: 3; color: #fff; mix-blend-mode: difference; display: flex; flex-direction: column; justify-content: center; padding: 0 var(--gutter); font-size: clamp(4.6rem, 17.5vw, 20rem); line-height: 0.8; pointer-events: none; }
-  .hero-name span { display: block; will-change: transform; }
-  .w2 { align-self: flex-end; }
-  .hero-frame { position: absolute; z-index: 2; left: 50%; top: 50%; width: clamp(220px, 25vw, 400px); aspect-ratio: 4 / 5; translate: -50% -50%; border-radius: var(--radius); overflow: hidden; background: var(--lilac); will-change: transform; }
+  .hero { position: relative; }
+  .hero-stage { position: relative; height: 100svh; min-height: 680px; overflow: hidden; background: var(--paper); }
+  .hero-copy { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px var(--gutter) 40px; }
+  .eyebrow { color: var(--muted); }
+  .hl { margin-top: 26px; font-size: clamp(3.2rem, 9.2vw, 9.6rem); line-height: 0.98; letter-spacing: -0.03em; }
+  .hl-line { display: block; white-space: nowrap; position: relative; }
+  .mark { position: relative; display: inline-block; padding: 0 0.12em; }
+  .mark-bg { position: absolute; z-index: -1; left: 0; right: 0; top: 0.2em; bottom: 0.08em; background: var(--pink); border-radius: 0.12em; transform-origin: left; transform: skewX(-6deg); }
+  .mark-t { position: relative; }
+  .sparks { position: absolute; width: 0.7em; right: -0.38em; top: -0.32em; overflow: visible; }
+  .sparks path, .squiggle path { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
+  .squiggle { position: absolute; width: 2.7em; right: 0.05em; bottom: -0.16em; overflow: visible; }
+  .squiggle path { stroke: #8e9cff; stroke-width: 3.4; }
+  .capsule { display: inline-block; width: 1.9em; height: 0.76em; margin: 0 0.06em; border-radius: 999px; vertical-align: -0.04em; background: var(--lilac); }
+  .dot { color: #8e9cff; }
+  .sub { max-width: 46ch; margin-top: 30px; font-size: 1.08rem; color: var(--muted); }
+  .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 24px; border-radius: 999px; font-size: 0.95rem; font-weight: 500; transition: transform 0.6s var(--ease), background 0.4s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-ink { background: var(--ink); color: var(--paper); }
+  .btn-play { padding-left: 8px; background: #fff; box-shadow: 0 1px 0 var(--line), 0 10px 30px -12px rgb(29 26 36 / 0.25); }
+  .play-dot { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: #8e9cff; color: #fff; }
+  .play-dot svg { translate: 1px 0; }
+
+  .hero-frame { position: absolute; z-index: 3; left: 0; top: 0; width: 0; height: 0; overflow: hidden; border-radius: 999px; background: var(--lilac); pointer-events: none; }
   .slide { position: absolute; inset: 0; margin: 0; }
   .slide img { width: 100%; height: 100%; object-fit: cover; }
-  .hero-play { position: absolute; inset: 0; z-index: 2; cursor: none; }
-  .hero-cap { position: absolute; left: var(--gutter); bottom: 32px; display: grid; gap: 4px; }
-  .cap-t { font: 1.7rem/1.1 var(--serif); }
-  .hero-scroll { position: absolute; right: var(--gutter); bottom: 32px; display: flex; align-items: center; gap: 12px; }
-  .hero-scroll i { width: 48px; height: 1px; background: var(--ink); transform-origin: left; animation: line 2.2s var(--ease) infinite; }
-  @keyframes line { 0% { transform: scaleX(0); } 60% { transform: scaleX(1); transform-origin: left; } 61% { transform-origin: right; } 100% { transform: scaleX(0); transform-origin: right; } }
+  .frame-cap { position: absolute; left: 50%; bottom: 7%; translate: -50% 0; z-index: 3; padding: 8px 16px; border-radius: 999px; background: rgb(255 255 255 / 0.85); backdrop-filter: blur(8px); opacity: 0; white-space: nowrap; }
+
+  .floaters { position: absolute; inset: 0; z-index: 1; }
+  .fl { position: absolute; display: block; will-change: transform; }
+  .fl-p { display: block; will-change: transform; }
+  .fl-card { display: block; rotate: var(--r, 0deg); transition: rotate 0.8s var(--ease), scale 0.8s var(--ease), box-shadow 0.8s var(--ease); box-shadow: 0 1px 0 rgb(29 26 36 / 0.04), 0 24px 50px -24px rgb(29 26 36 / 0.28); }
+  a.fl:hover .fl-card { rotate: 0deg; scale: 1.05; box-shadow: 0 1px 0 rgb(29 26 36 / 0.04), 0 34px 60px -24px rgb(29 26 36 / 0.36); }
+  .fl-a { left: 4%; top: 15%; } .fl-b { left: 9%; top: 68%; } .fl-c { right: 5%; top: 56%; } .fl-d { left: 3%; top: 47%; }
+  .fl-e { right: 3.5%; top: 14%; } .fl-f { right: 18%; top: 77%; } .fl-g { left: 22%; top: 8%; } .fl-h { right: 23%; top: 7%; }
+  .card-proj { width: clamp(190px, 17vw, 260px); aspect-ratio: 1.25; padding: 16px; border-radius: 18px; background: var(--tint); position: relative; overflow: hidden; }
+  .cp-t { display: block; font: 1.45rem/1 var(--serif); max-width: 9ch; }
+  .cp-s { position: absolute; left: 16px; bottom: 16px; width: 52%; font-size: 0.72rem; line-height: 1.35; color: rgb(29 26 36 / 0.7); }
+  .card-proj img { position: absolute; right: 12px; bottom: 12px; width: 40%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; }
+  .card-ui { width: 200px; padding: 14px 16px; border-radius: 16px; background: #fff; display: grid; gap: 8px; }
+  .ui-k { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .ui-t { font: 1.25rem/1 var(--serif); }
+  .ui-bar { height: 4px; border-radius: 4px; background: var(--paper); overflow: hidden; }
+  .ui-bar i { display: block; height: 100%; width: 62%; background: #8e9cff; border-radius: 4px; }
+  .ui-row { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
+  .card-photo { width: clamp(150px, 13vw, 200px); padding: 8px 8px 30px; background: #fff; border-radius: 6px; }
+  .card-photo img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 3px; }
+  .card-pills { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; box-shadow: none; }
+  .pill-s { padding: 7px 14px; border-radius: 999px; background: var(--tint); font-size: 0.8rem; font-weight: 500; box-shadow: 0 12px 24px -16px rgb(29 26 36 / 0.4); }
+  .pill-s:nth-child(2) { margin-left: 26px; } .pill-s:nth-child(3) { margin-left: 8px; } .pill-s:nth-child(4) { margin-left: 34px; }
+  .card-hello { display: flex; align-items: center; gap: 10px; width: 250px; padding: 10px 14px 10px 10px; border-radius: 999px; background: #fff; font-size: 0.78rem; line-height: 1.3; }
+  .card-hello img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; object-position: 50% 30%; }
+  .card-hello b { display: block; font-weight: 600; }
+  .card-hello span span { color: var(--muted); }
+  .card-done { position: relative; width: 168px; padding: 14px 16px 16px; border-radius: 18px; background: #e7f59b; display: grid; gap: 6px; }
+  .cd-t { font: 1.35rem/1 var(--serif); font-style: italic; }
+  .cd-ok { position: absolute; right: 12px; bottom: 12px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #e7f59b; }
+  .card-badge { width: 112px; border-radius: 50%; box-shadow: none; }
+  .card-badge svg { animation: spin 20s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 1100px) { .fl-g, .fl-h, .fl-d { display: none; } }
   @media (max-width: 760px) {
-    .hero-r { display: none; }
-    .hero-name { justify-content: space-between; padding-block: 160px 130px; }
-    .hero-frame { width: 52vw; }
+    .fl-b, .fl-f, .fl-c { display: none; }
+    .fl-a { left: -40px; top: 9%; scale: 0.7; } .fl-e { right: -50px; top: auto; bottom: 4%; scale: 0.7; }
+    .hl { font-size: clamp(2.6rem, 12.4vw, 4rem); }
+    .hl-line { white-space: normal; }
   }
 
   /* MANIFESTE */
@@ -159,7 +249,7 @@ const rows = [carnet.slice(0, half), carnet.slice(half)];
   .films { position: relative; margin-top: clamp(120px, 16vw, 220px); }
   @media (min-width: 900px) { .films { height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 64px; } }
   .films-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: clamp(24px, 3vh, 40px); }
-  .films-head h2 { font-size: clamp(4rem, 9vw, 9rem); }
+  .films-head h2 { font-size: clamp(3.6rem, 8vw, 8rem); }
   .films-track { display: flex; align-items: flex-start; gap: clamp(16px, 2.2vw, 32px); padding-inline: var(--gutter); width: max-content; will-change: transform; }
   .film { flex: none; text-align: left; cursor: none; }
   .film-media { position: relative; display: block; height: min(50vh, 520px); aspect-ratio: var(--ratio); overflow: hidden; border-radius: var(--radius); background: var(--tint); }
@@ -193,14 +283,17 @@ const rows = [carnet.slice(0, half), carnet.slice(half)];
   .peek img { width: 100%; height: 100%; object-fit: cover; }
   @media (hover: none) { .peek { display: none; } }
 
-  /* CARNET */
-  .carnet { padding-top: clamp(140px, 18vw, 260px); overflow: hidden; }
-  .carnet-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
-  .carnet-head h2 { font-size: clamp(3.4rem, 9vw, 9rem); }
-  .marquee + .marquee { margin-top: 18px; }
-  .m-track { display: flex; gap: 18px; width: max-content; }
-  .shot { flex: none; width: clamp(180px, 19vw, 280px); cursor: none; }
-  .shot img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); background: #fff; transition: transform 0.8s var(--ease); }
-  .shot:hover img { transform: scale(0.96); }
-  .shot .label { display: block; margin-top: 10px; color: var(--muted); }
+  /* CARNET : anneau */
+  .carnet { position: relative; margin-top: clamp(100px, 14vw, 200px); overflow: hidden; }
+  .ring-stage { position: relative; height: min(92vh, 860px); min-height: 560px; perspective: 1500px; perspective-origin: 50% 10%; cursor: grab; touch-action: pan-y; user-select: none; }
+  .ring-stage.dragging { cursor: grabbing; }
+  .ring { --R: 700px; --w: 190px; position: absolute; left: 50%; top: 67%; width: 0; height: 0; transform-style: preserve-3d; }
+  .rc { position: absolute; left: calc(var(--w) / -2); top: calc(var(--w) / -2 - 20px); width: var(--w); transform: rotateY(calc(var(--i) * 15deg)) translateZ(var(--R)); cursor: none; }
+  .rc img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #fff; box-shadow: 0 30px 50px -30px rgb(29 26 36 / 0.45); pointer-events: none; transition: scale 0.6s var(--ease); }
+  .rc:hover img { scale: 1.06; }
+  .rc .label { display: block; margin-top: 10px; text-align: center; color: var(--muted); }
+  .ring-center { position: absolute; left: 50%; top: 4%; translate: -50% 0; z-index: 2; display: grid; justify-items: center; gap: 12px; text-align: center; pointer-events: none; }
+  .ring-center a { pointer-events: auto; }
+  .ring-center h2 { font-size: clamp(3.4rem, 9vw, 8.5rem); }
+  @media (max-width: 760px) { .ring { --R: 420px; --w: 130px; } .ring-stage { perspective: 1000px; } }
 </style>

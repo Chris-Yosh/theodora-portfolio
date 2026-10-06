@@ -1,0 +1,194 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+
+const projects = await getCollection('projects');
+const films = projects.reduce((n, p) => n + p.data.videos.length, 0);
+const minutes = Math.round(projects.flatMap((p) => p.data.videos).reduce((t, v) => t + (v.duration ?? 0), 0) / 60);
+const steps = [
+  ['Script', "On part de votre message, et on l'écrit pour qu'il se comprenne du premier coup."],
+  ['Moodboard', 'Couleurs, matières, références : on fixe ensemble l’univers du film.'],
+  ['Storyboard', 'Chaque plan est dessiné avant d’être animé. On valide le rythme ici.'],
+  ['Production', 'Illustration, animation 2D, 3D ou image par image, jusqu’à la vidéo finale.'],
+];
+const collage = [
+  { src: '/images/projects/maison-givenchy/cover.webp', cls: 'c1', r: -8 },
+  { src: '/images/projects/activation-loreal-pro-collage-digital-ia/cover.webp', cls: 'c2', r: 6 },
+  { src: '/images/projects/radio-dab/cover.webp', cls: 'c3', r: -3 },
+  { src: '/images/projects/aristophil/cover.webp', cls: 'c4', r: 9 },
+  { src: '/images/projects/loreal-teaser-head-spa/cover.webp', cls: 'c5', r: -12 },
+];
+const tools = ['After Effects', 'Illustrator', 'Animate', 'Blender', 'Cinema 4D'];
+---
+<Base title="À propos" image="/images/theodora.webp" description="Théodora Ballet, directrice artistique et motion designer freelance à Paris, spécialisée en vidéo explicative.">
+  <!-- Filtre « papier déchiré » pour la photo -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="torn"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" /><feDisplacementMap in="SourceGraphic" scale="14" /></filter>
+  </svg>
+
+  <section class="about wrap">
+    <div class="bento">
+      <!-- Intro, en dossier -->
+      <article class="tile folder t-lilac a-intro" data-tile>
+        <span class="tab" aria-hidden="true"></span>
+        <span class="chip">À propos</span>
+        <h1>Hello, moi c'est <em>Théodora</em>.</h1>
+        <p class="lead">Directrice artistique et motion designer à {site.city}. Je transforme des idées complexes en vidéos qu'on a envie de regarder jusqu'au bout.</p>
+      </article>
+
+      <!-- Portrait façon collage -->
+      <figure class="tile a-photo" data-tile>
+        <div class="paper">
+          <img src="/images/theodora.webp" alt="Portrait de Théodora Ballet" />
+        </div>
+        <span class="tape tape-1" aria-hidden="true"></span>
+        <span class="tape tape-2" aria-hidden="true"></span>
+        <svg class="star" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 C 54 40, 60 46, 96 50 C 60 54, 54 60, 50 96 C 46 60, 40 54, 4 50 C 40 46, 46 40, 50 4 Z" /></svg>
+        <figcaption class="it">Théodora, quelque part entre deux storyboards.</figcaption>
+      </figure>
+
+      <!-- Chiffres -->
+      <article class="tile t-butter a-num" data-tile>
+        <p class="num tnum">{films}</p>
+        <p class="label">Réalisations en ligne</p>
+        <p class="muted small tnum">{minutes} minutes d'animation, de 2019 à 2026</p>
+      </article>
+
+      <!-- Bio -->
+      <article class="tile a-bio" data-tile>
+        <p class="label muted">Mon métier</p>
+        <p class="bio">Spécialisée en conception et production de <em>vidéos explicatives</em>, je vous accompagne à chaque étape de votre projet créatif : du script au moodboard, de l'élaboration du storyboard jusqu'à la production vidéo et aux illustrations.</p>
+        <ul class="services">
+          <li>Publicité TV</li>
+          <li>Vidéo explicative & institutionnelle</li>
+          <li>Bibliothèque d'assets d'animation 2D</li>
+        </ul>
+      </article>
+
+      <!-- Collage : on peut déplacer les morceaux -->
+      <article class="tile folder t-peach a-collage" data-tile>
+        <span class="tab" aria-hidden="true"></span>
+        <div class="collage-head">
+          <span class="chip">Mon dada</span>
+          <h2>J'aime le <em>collage</em>.</h2>
+          <p class="muted small">Papier, photo, typo découpée : on retrouve le collage dans Givenchy, L'Oréal Pro ou Radio DAB+. Attrapez les morceaux.</p>
+        </div>
+        <div class="collage" data-collage>
+          {collage.map((c) => (
+            <span class={`scrap ${c.cls}`} data-sticker style={`rotate:${c.r}deg`}><img src={c.src} alt="" draggable="false" /></span>
+          ))}
+          <span class="scrap word w1" data-sticker>coupé</span>
+          <span class="scrap word w2" data-sticker>collé</span>
+          <span class="scrap word w3" data-sticker>animé !</span>
+        </div>
+      </article>
+
+      <!-- Méthode -->
+      <article class="tile t-sky a-steps" data-tile>
+        <p class="label muted">Comment on travaille</p>
+        <ol>
+          {steps.map(([t, d], k) => (
+            <li><span class="n tnum">0{k + 1}</span><span class="st">{t}</span><span class="sd muted">{d}</span></li>
+          ))}
+        </ol>
+      </article>
+
+      <!-- Outils -->
+      <article class="tile t-sage a-tools" data-tile>
+        <p class="label muted">Outils</p>
+        <ul class="tool-list">{tools.map((t) => <li>{t}</li>)}</ul>
+      </article>
+
+      <!-- Clients -->
+      <article class="tile t-pink a-clients" data-tile>
+        <p class="label muted">Ils m'ont fait confiance</p>
+        <ul class="client-list">{site.clients.map((c) => <li>{c}</li>)}</ul>
+      </article>
+
+      <!-- Contact -->
+      <a class="tile a-contact" href={site.links.malt} target="_blank" rel="noopener" data-tile data-cursor="Écrire">
+        <p class="label">Un projet ?</p>
+        <p class="ct">Écrivez-moi <em>sur Malt</em></p>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about { padding-top: 110px; }
+  .bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; }
+  .tile { position: relative; margin: 0; padding: clamp(20px, 2.4vw, 32px); border-radius: 22px; background: var(--tint, #fff); min-width: 0; }
+  .chip { justify-self: start; align-self: flex-start; display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgb(255 255 255 / 0.7); font-size: 0.8rem; font-weight: 500; }
+  .small { font-size: 0.88rem; }
+
+  /* Onglet de dossier (Keya) */
+  .folder { border-top-left-radius: 0; margin-top: 26px; }
+  .tab { position: absolute; left: 0; top: -26px; width: 38%; height: 28px; background: var(--tint); border-radius: 18px 18px 0 0; }
+  .tab::after { content: ''; position: absolute; right: -22px; bottom: 0; width: 24px; height: 24px; background: radial-gradient(circle at 100% 0, transparent 23px, var(--tint) 24px); }
+
+  .a-intro { grid-column: 1 / 8; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 420px; }
+  .a-intro h1 { font-size: clamp(3rem, 6.4vw, 6.4rem); }
+  .lead { max-width: 40ch; font-size: 1.1rem; }
+
+  .a-photo { grid-column: 8 / 13; grid-row: span 2; background: none; padding: 26px 18px 18px; display: grid; place-items: center; }
+  .paper { position: relative; width: 100%; padding: 14px 14px 18px; background: #fff; filter: url(#torn) drop-shadow(0 22px 30px rgb(29 26 36 / 0.22)); rotate: 2.5deg; }
+  .paper img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 20%; }
+  .tape { position: absolute; width: 120px; height: 34px; background: rgb(243 232 198 / 0.75); mix-blend-mode: multiply; box-shadow: inset 0 0 0 1px rgb(29 26 36 / 0.04); }
+  .tape-1 { top: 14px; left: 18%; rotate: -14deg; }
+  .tape-2 { bottom: 70px; right: 6%; rotate: 32deg; background: rgb(221 214 240 / 0.8); }
+  .star { position: absolute; width: 74px; top: 30%; left: -8px; fill: var(--pink); animation: spin 14s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  figcaption { margin-top: 18px; font-size: 1.3rem; text-align: center; }
+
+  .a-num { grid-column: 1 / 4; display: grid; align-content: space-between; gap: 8px; }
+  .num { font: 7rem/0.85 var(--serif); letter-spacing: -0.03em; }
+  .a-bio { grid-column: 4 / 8; background: #fff; display: grid; align-content: start; gap: 18px; }
+  .bio { font: 1.6rem/1.15 var(--serif); }
+  .services { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  .services li { padding: 6px 14px; border-radius: 999px; background: var(--paper); font-size: 0.85rem; }
+
+  .a-collage { grid-column: 1 / 8; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 20px; min-height: 440px; }
+  .collage-head { display: grid; align-content: start; gap: 16px; }
+  .collage-head h2 { font-size: clamp(2.6rem, 4.6vw, 4.4rem); }
+  .collage { position: relative; min-height: 360px; }
+  .scrap { position: absolute; display: block; cursor: grab; touch-action: none; user-select: none; }
+  .scrap img { width: 100%; border: 6px solid #fff; box-shadow: 0 18px 30px -18px rgb(29 26 36 / 0.5); pointer-events: none; }
+  .c1 { width: 46%; left: 2%; top: 4%; } .c2 { width: 44%; right: 0; top: 0; } .c3 { width: 34%; left: 30%; top: 34%; }
+  .c4 { width: 40%; left: 0; bottom: 0; } .c5 { width: 38%; right: 4%; bottom: 4%; }
+  .word { padding: 6px 12px; background: var(--ink); color: var(--paper); font: 1.5rem/1 var(--serif); font-style: italic; box-shadow: 0 12px 20px -12px rgb(29 26 36 / 0.6); }
+  .w1 { left: 8%; top: 40%; rotate: -6deg; } .w2 { right: 12%; top: 46%; rotate: 5deg; background: #fff; color: var(--ink); } .w3 { left: 44%; bottom: 8%; rotate: -3deg; background: #8e9cff; color: #fff; }
+
+  .a-steps { grid-column: 8 / 13; }
+  .a-steps ol { list-style: none; padding: 0; margin: 18px 0 0; display: grid; }
+  .a-steps li { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 10px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .n { font-size: 0.78rem; padding-top: 6px; color: var(--muted); }
+  .st { font: 1.6rem/1.1 var(--serif); }
+  .sd { grid-column: 2; font-size: 0.86rem; }
+
+  .a-tools { grid-column: 1 / 4; }
+  .tool-list, .client-list { list-style: none; padding: 0; margin: 16px 0 0; }
+  .tool-list li { font: 1.5rem/1.3 var(--serif); }
+  .a-clients { grid-column: 4 / 10; }
+  .client-list { display: flex; flex-wrap: wrap; gap: 4px 0; }
+  .client-list li { font: clamp(1.5rem, 2.4vw, 2.2rem)/1.15 var(--serif); }
+  .client-list li:not(:last-child)::after { content: '·'; margin-inline: 12px; opacity: 0.4; }
+  .a-contact { grid-column: 10 / 13; background: var(--ink); color: var(--paper); display: grid; align-content: space-between; min-height: 220px; cursor: none; overflow: hidden; }
+  .ct { font: 2.2rem/1 var(--serif); }
+  .ct em { color: var(--pink); }
+  .arrow { position: absolute; right: 22px; top: 18px; font-size: 1.6rem; transition: transform 0.6s var(--ease); }
+  .a-contact:hover .arrow { transform: translate(4px, -4px) rotate(8deg); }
+
+  @media (max-width: 1000px) {
+    .a-intro, .a-collage, .a-clients { grid-column: 1 / -1; }
+    .a-photo { grid-column: 1 / 7; grid-row: auto; }
+    .a-num { grid-column: 7 / -1; }
+    .a-bio, .a-steps { grid-column: 1 / -1; }
+    .a-tools { grid-column: 1 / 7; } .a-contact { grid-column: 7 / -1; }
+  }
+  @media (max-width: 640px) {
+    .bento > * { grid-column: 1 / -1 !important; }
+    .a-collage { grid-template-columns: 1fr; }
+  }
+</style>

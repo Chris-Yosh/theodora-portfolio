@@ -3,8 +3,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { CustomEase } from 'gsap/CustomEase';
+import { Draggable } from 'gsap/Draggable';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase);
+gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase, Draggable);
 CustomEase.create('silk', 'M0,0 C0.16,1 0.3,1 1,1');
 CustomEase.create('curtain', 'M0,0 C0.76,0 0.24,1 1,1');
 
@@ -26,6 +27,16 @@ if (!reduce) {
       const el = id && document.getElementById(id);
       if (el && a.pathname === location.pathname) { e.preventDefault(); lenis!.scrollTo(el, { duration: 1.6 }); }
     });
+  });
+}
+
+/* ---------- En-tête : se cache en descendant, revient en remontant ---------- */
+const header = $('[data-header]');
+if (header && !reduce) {
+  ScrollTrigger.create({
+    start: 'top -120',
+    onUpdate: (st) => gsap.to(header, { yPercent: st.direction === 1 ? -110 : 0, duration: 0.6, ease: 'expo.out', overwrite: true }),
+    onLeaveBack: () => gsap.to(header, { yPercent: 0, duration: 0.6, ease: 'expo.out', overwrite: true }),
   });
 }
 
@@ -68,68 +79,103 @@ function splitReveals() {
 function hero() {
   const root = $('[data-hero]');
   if (!root) return;
+  const stage = $('[data-hero-stage]', root)!;
+  const copy = $('.hero-copy', root)!;
   const frame = $('[data-hero-frame]', root)!;
-  const words = $$('[data-hero-word]', root);
+  const capsule = $('[data-capsule]', root)!;
   const slides = $$('[data-slide]', root);
-  const capT = $('[data-cap-title]', root)!;
-  const capM = $('[data-cap-meta]', root)!;
-  const chrome = $$('.hero-l, .hero-r, .hero-cap, .hero-scroll', root);
-  let opened = 0;
+  const cap = $('[data-frame-cap]', root)!;
+  const fls = $$('[data-fl]', root);
+  const lines = $$('[data-hl-line]', root);
+  const fades = $$('[data-hero-fade]', root);
+  const draws = $$<SVGPathElement>('[data-draw]', root);
+  const mark = $('[data-mark]', root)!;
 
-  // Diaporama : chaque film entre par un volet qui remonte, la légende change en même temps
+  // La fenêtre vidéo est posée exactement sur la capsule de la phrase
+  const place = () => {
+    const s = stage.getBoundingClientRect(), c = capsule.getBoundingClientRect();
+    return { left: c.left - s.left, top: c.top - s.top, width: c.width, height: c.height };
+  };
+  gsap.set(frame, place());
+  let opened = 0;
+  window.addEventListener('resize', () => { if (opened === 0) gsap.set(frame, place()); });
+
+  // Diaporama dans la capsule
   let i = 0;
   const next = () => {
     const prev = slides[i];
     i = (i + 1) % slides.length;
     const cur = slides[i];
     slides.forEach((s) => (s.style.zIndex = s === cur ? '2' : s === prev ? '1' : '0'));
+    cap.textContent = cur.dataset.title ?? '';
     gsap.timeline()
-      .fromTo(cur, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'curtain' })
-      .fromTo($('img', cur), { scale: 1.35, yPercent: 8 }, { scale: 1, yPercent: 0, duration: 1.6, ease: 'silk' }, 0)
-      .to($('img', prev), { yPercent: -12, scale: 1.08, duration: 1.3, ease: 'curtain' }, 0)
-      .to([capT, capM], { yPercent: -60, opacity: 0, duration: 0.45, ease: 'power2.in', stagger: 0.05 }, 0)
-      .add(() => {
-        capT.textContent = cur.dataset.title ?? '';
-        capM.textContent = cur.dataset.meta ?? '';
-      }, 0.5)
-      .set($('img', prev), { yPercent: 0, scale: 1 }, 1.3)
-      .fromTo([capT, capM], { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06 }, 0.5);
+      .fromTo(cur, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'curtain' })
+      .fromTo($('img', cur), { scale: 1.4, xPercent: 10 }, { scale: 1, xPercent: 0, duration: 1.5, ease: 'silk' }, 0)
+      .to($('img', prev), { xPercent: -14, duration: 1.2, ease: 'curtain' }, 0)
+      .set($('img', prev), { xPercent: 0 }, 1.2);
   };
-  if (!reduce) gsap.delayedCall(3.6, function loop() { next(); gsap.delayedCall(3.2, loop); });
+  if (!reduce) gsap.delayedCall(4.2, function loop() { next(); gsap.delayedCall(2.8, loop); });
+
   if (reduce) return;
 
-  // Entrée : après le rideau, le nom monte lettre par lettre et la fenêtre s'ouvre depuis son centre
-  const intro = gsap.timeline({ delay: 0.75 });
-  words.forEach((w, k) => {
-    const s = SplitText.create(w, { type: 'chars', mask: 'chars' });
-    intro.from(s.chars, { yPercent: 115, rotate: k ? -8 : 8, duration: 1.6, ease: 'silk', stagger: 0.045 }, k * 0.12);
-  });
-  intro
-    .from(frame, { clipPath: 'inset(50% 50% 50% 50%)', duration: 1.6, ease: 'curtain' }, 0.25)
-    .from($('img', slides[0]), { scale: 1.6, duration: 2.2, ease: 'silk' }, 0.25)
-    .from(chrome, { y: 24, opacity: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08 }, 0.9);
+  // Entrée : la phrase monte, le surligneur passe, les traits se dessinent, la capsule s'ouvre, les cartes arrivent
+  draws.forEach((d) => { const l = d.getTotalLength(); gsap.set(d, { strokeDasharray: l, strokeDashoffset: l }); });
+  gsap.set(mark, { skewX: -6, scaleX: 0, transformOrigin: 'left center' });
+  gsap.set(lines, { clipPath: 'inset(-60% -12% -8% -12%)' });
+  const inner = lines.map((l) => { const w = document.createElement('span'); w.style.display = 'inline-block'; while (l.firstChild) w.append(l.firstChild); l.append(w); return w; });
+  const cards = fls.map((f) => $('.fl-card', f)!);
 
-  // La fenêtre s'incline vers la souris, le nom glisse en sens inverse
+  const intro = gsap.timeline({ delay: 0.8, onComplete: () => { gsap.set(lines, { clipPath: 'none' }); } });
+  intro
+    .from(inner, { yPercent: 110, rotate: 3, duration: 1.5, ease: 'silk', stagger: 0.12 }, 0)
+    .from(fades[0], { y: 16, opacity: 0, duration: 1, ease: 'expo.out' }, 0.1)
+    .to(mark, { scaleX: 1, duration: 0.9, ease: 'expo.inOut' }, 0.75)
+    .to(draws, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut', stagger: 0.15 }, 1.05)
+    .add(() => gsap.set(frame, place()), 1.1)
+    .fromTo(frame, { clipPath: 'inset(0% 50% 0% 50% round 999px)' }, { clipPath: 'inset(0% 0% 0% 0% round 999px)', duration: 1.2, ease: 'curtain', onComplete: () => { gsap.set(frame, { clipPath: 'none' }); } }, 1.1)
+    .from($('img', slides[0]), { scale: 1.6, duration: 1.8, ease: 'silk' }, 1.1)
+    .from(fades.slice(1), { y: 24, opacity: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08 }, 1.2)
+    .from(cards, {
+      opacity: 0, scale: 0.4, y: 120, rotation: () => gsap.utils.random(-40, 40),
+      duration: 1.5, ease: 'back.out(1.4)', stagger: { each: 0.08, from: 'center' },
+      onComplete() {
+        cards.forEach((c, k) => gsap.to(c, { y: k % 2 ? -12 : 12, rotation: k % 2 ? 1.5 : -1.5, duration: 2.6 + k * 0.3, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+      },
+    }, 1.0);
+
+  // Profondeur : chaque carte suit la souris selon sa distance
   if (fine) {
-    gsap.set(frame, { transformPerspective: 900 });
-    const rx = gsap.quickTo(frame, 'rotationY', { duration: 1.2, ease: 'power3' });
-    const ry = gsap.quickTo(frame, 'rotationX', { duration: 1.2, ease: 'power3' });
-    const wx = words.map((w) => gsap.quickTo(w, 'x', { duration: 1.6, ease: 'power3' }));
+    const movers = fls.map((f) => {
+      const p = $('.fl-p', f)!, d = Number(f.dataset.depth ?? 1);
+      return { d, x: gsap.quickTo(p, 'x', { duration: 1.4, ease: 'power3' }), y: gsap.quickTo(p, 'y', { duration: 1.4, ease: 'power3' }) };
+    });
+    const cx = gsap.quickTo(copy, 'x', { duration: 1.8, ease: 'power3' });
+    const cy = gsap.quickTo(copy, 'y', { duration: 1.8, ease: 'power3' });
     root.addEventListener('pointermove', (e) => {
       const nx = e.clientX / innerWidth - 0.5, ny = e.clientY / innerHeight - 0.5;
-      const k = 1 - opened;
-      rx(nx * 14 * k); ry(-ny * 10 * k);
-      wx.forEach((f, k) => f(nx * (k ? -40 : 40)));
+      movers.forEach((m) => { m.x(-nx * 70 * m.d); m.y(-ny * 50 * m.d); });
+      cx(nx * 12); cy(ny * 8);
     });
   }
 
-  // Au scroll : la fenêtre s'ouvre en plein écran et le nom s'écarte
+  // Au scroll : les cartes s'envolent vers les bords, la capsule s'ouvre en plein écran
   gsap.matchMedia().add('(min-width: 900px)', () => {
-    gsap.timeline({ scrollTrigger: { trigger: root, start: 'top top', end: '+=110%', pin: true, scrub: 1, invalidateOnRefresh: true, onUpdate: (s) => { opened = s.progress; if (s.progress > 0.02) gsap.to(frame, { rotationX: 0, rotationY: 0, duration: 0.6, overwrite: 'auto' }); } } })
-      .to(frame, { width: () => innerWidth, height: () => innerHeight, borderRadius: 0, ease: 'power2.inOut' }, 0)
-      .to(words[0], { xPercent: -70, opacity: 0, ease: 'power2.in' }, 0)
-      .to(words[1], { xPercent: 70, opacity: 0, ease: 'power2.in' }, 0)
-      .to(chrome, { opacity: 0, duration: 0.25 }, 0);
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: root, start: 'top top', end: '+=130%', pin: true, scrub: 1, invalidateOnRefresh: true, onUpdate: (st) => (opened = st.progress) },
+    });
+    tl.fromTo(frame, { ...place() }, {
+      left: 0, top: 0, width: () => stage.clientWidth, height: () => stage.clientHeight, ease: 'power3.inOut', immediateRender: false,
+    }, 0)
+      .fromTo(frame, { borderRadius: () => capsule.getBoundingClientRect().height / 2 }, { borderRadius: 0, ease: 'power2.in', immediateRender: false }, 0)
+      .to(copy, { opacity: 0, scale: 0.94, filter: 'blur(6px)', ease: 'power2.in', duration: 0.6 }, 0)
+      .to(cap, { opacity: 1, duration: 0.2 }, 0.8);
+    fls.forEach((f) => {
+      tl.to(f, {
+        x: () => { const r = f.getBoundingClientRect(); return (r.left + r.width / 2 - innerWidth / 2) * 0.9; },
+        y: () => { const r = f.getBoundingClientRect(); return (r.top + r.height / 2 - innerHeight / 2) * 0.9; },
+        rotation: () => gsap.utils.random(-25, 25), scale: 0.85, opacity: 0, ease: 'power2.in', duration: 0.7,
+      }, 0);
+    });
   });
 }
 
@@ -261,24 +307,70 @@ function peek() {
   rows.addEventListener('pointerleave', () => gsap.to(box, { scale: 0, duration: 0.5, ease: 'expo.in' }));
 }
 
-/* ---------- Carnet : deux bandeaux opposés qui accélèrent avec le scroll ---------- */
-function marquees() {
-  if (reduce) return;
-  $$('[data-marquee]').forEach((m) => {
-    const track = $('.m-track', m)!;
-    const right = m.dataset.marquee === 'right';
-    const loop = gsap.fromTo(track, { xPercent: right ? -50 : 0 }, { xPercent: right ? 0 : -50, duration: 70, ease: 'none', repeat: -1 });
-    let hover = false;
-    ScrollTrigger.create({
-      trigger: m, start: 'top bottom', end: 'bottom top',
-      onUpdate: (self) => {
-        if (hover) return;
-        const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 250, 8);
-        gsap.to(loop, { timeScale: boost, duration: 0.2, overwrite: true, onComplete: () => { gsap.to(loop, { timeScale: 1, duration: 1.2, ease: 'power2.out' }); } });
-      },
+/* ---------- Carnet : anneau 3D (rotation lente, élan au scroll, glisser à la main) ---------- */
+function ring() {
+  const stage = $('[data-ring-stage]'), el = $('[data-ring]');
+  if (!stage || !el) return;
+  const cards = $$('[data-rc]', el);
+  const step = 360 / cards.length;
+  const readR = () => parseFloat(getComputedStyle(el).getPropertyValue('--R')) || 700;
+  let R = readR(), rot = 0, vel = 0, dragging = false, lastX = 0, moved = 0, visible = false;
+  window.addEventListener('resize', () => { R = readR(); });
+
+  const render = () => {
+    el.style.transform = `translateZ(${-R}px) rotateX(-9deg) rotateY(${rot}deg)`;
+    cards.forEach((c, k) => {
+      const cos = Math.cos(((k * step + rot) * Math.PI) / 180);
+      c.style.opacity = String(0.2 + 0.8 * Math.max(0, (cos + 0.4) / 1.4) ** 1.4);
+      c.style.pointerEvents = cos > 0.55 ? 'auto' : 'none';
     });
-    m.addEventListener('pointerenter', () => { hover = true; gsap.to(loop, { timeScale: 0.15, duration: 0.8, overwrite: true }); });
-    m.addEventListener('pointerleave', () => { hover = false; gsap.to(loop, { timeScale: 1, duration: 0.8, overwrite: true }); });
+  };
+  render();
+
+  gsap.ticker.add(() => {
+    if (!visible) return;
+    if (!dragging) { vel *= 0.94; rot += (reduce ? 0 : 0.05) + vel; }
+    render();
+  });
+  ScrollTrigger.create({
+    trigger: stage, start: 'top bottom', end: 'bottom top',
+    onToggle: (st) => { visible = st.isActive; },
+    onEnter: () => { if (!reduce) vel = -5; },
+    onUpdate: (st) => { if (!dragging && !reduce) vel += gsap.utils.clamp(-0.6, 0.6, st.getVelocity() / -6000); },
+  });
+
+  stage.addEventListener('pointerdown', (e) => {
+    dragging = true; moved = 0; lastX = e.clientX;
+    stage.classList.add('dragging');
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    lastX = e.clientX; moved += Math.abs(dx);
+    rot += dx * 0.12; vel = dx * 0.12;
+  });
+  const up = () => { dragging = false; stage.classList.remove('dragging'); };
+  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointercancel', up);
+  stage.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+}
+
+/* ---------- À propos : tuiles et collage ---------- */
+function about() {
+  const tiles = $$('[data-tile]');
+  if (!tiles.length) return;
+  if (!reduce) {
+    ScrollTrigger.batch(tiles, {
+      start: 'top 92%',
+      onEnter: (batch) => gsap.from(batch, { y: 80, scale: 0.94, rotation: () => gsap.utils.random(-4, 4), opacity: 0, duration: 1.3, ease: 'expo.out', stagger: 0.08 }),
+    });
+  }
+  let z = 20;
+  Draggable.create($$('[data-sticker]'), {
+    type: 'x,y', bounds: $('[data-collage]') ?? undefined, edgeResistance: 0.65,
+    onPress() { const t = this.target as HTMLElement; t.style.zIndex = String(++z); gsap.to(t, { scale: 1.08, rotation: '+=6', duration: 0.5, ease: 'back.out(2)' }); },
+    onRelease() { gsap.to(this.target, { scale: 1, duration: 0.6, ease: 'back.out(2)' }); },
   });
 }
 
@@ -305,7 +397,8 @@ document.fonts.ready.then(() => {
   splitReveals();
   films();
   peek();
-  marquees();
+  ring();
+  about();
   projectPage();
   ScrollTrigger.refresh();
 });
