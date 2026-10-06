@@ -5,20 +5,23 @@ Refonte visuelle de la page d'accueil de https://www.noo-mediation.fr/.
 
 Ouvrir `index.html` dans un navigateur, ou servir le dossier : `python3 -m http.server` puis http://localhost:8000.
 
-## Identité
-- **Palette** (dérivée de l'existant, plus saturée) : nuit `#15122e`, violet électrique `#4a2be0`, citron `#f5ee73`, mandarine `#ff5b1f`, lilas `#ece6ff`, crème `#fff8ee`, bordeaux `#5b1a14` (offre Délégation).
-- **Typo** : Bricolage Grotesque (titres serrés, chiffres XXL) + Instrument Serif italique pour les mots d'accent (solution, désaccord, résoudre…), qui reprend les italiques du site actuel.
-- **Logo** : mot-symbole « noo. » (point mandarine), décliné en géant dans le pied de page.
+## Identité — « Deux cercles »
+La médiation, c'est deux parties qui se rapprochent. Les deux « o » de *noo* deviennent deux cercles ; leur intersection — l'accord — est la seule touche de couleur vive du site. Ce symbole sert de logo, d'intro, de pictogramme pour les étapes (les cercles se rapprochent jusqu'à l'accord) et de signature géante en pied de page.
 
-## Ce qui donne du peps
-- Sections empilées en « feuilles » arrondies au lieu des vagues
-- Pastille « dès 49€ » qui tourne, soulignement dessiné à la main, surligneur sur les mots-clés
-- Comparatif reconstruit en HTML (au lieu d'une image) : compteurs animés, « vs » barré, anneau 70 %
-- Chemin des 4 étapes qui se trace au défilement (au lieu de l'image du diagramme)
+- **Palette** : papier `#f3efe7`, encre `#161512`, sable `#e8e1d3`, vert forêt `#1d322c`, brume `#c9d4c6`, argile `#c8573a` (accent unique).
+- **Typo** : Instrument Serif (titres, chiffres), Geist (texte), Geist Mono (repères, petites étiquettes).
+- **Mise en page** : éditoriale, filets fins, beaucoup d'air, sections numérotées (01)…(05).
+
+## Animations
+- Intro : les deux cercles se rejoignent, puis le rideau se lève
+- Titres révélés mot à mot, images dévoilées par un rideau avec léger zoom et parallaxe
+- Phrase manifeste qui s'allume mot à mot au défilement
+- Compteurs, barre de réussite, fil des étapes qui se trace au défilement
 - Conversation MIA jouée message par message
-- Bandeau « Apaiser les tensions, simplifier la vie » en défilement continu
-- Cartes offres et témoignages animées au survol, boutons « magnétiques »
-- Respecte `prefers-reduced-motion`, responsive jusqu'à 360 px
+- Offres : fond encre qui monte au survol ; boutons avec bulle argile et flèche qui défile
+- Témoignages en fondu avec barre de progression, bandeau « Apaiser les tensions » en défilement lent
+- Défilement doux (Lenis, chargé depuis jsDelivr ; le site marche sans)
+- Tout est désactivé si `prefers-reduced-motion` est activé
 
 ## Fichiers
 - `index.html` — page d'accueil
