@@ -1,0 +1,26 @@
+---
+import { site } from '../data/site';
+const l = site.links;
+---
+<footer id="contact" class="foot">
+  <div class="wrap">
+    <p class="serif kicker">Un projet en tête ?</p>
+    <h2 data-reveal>Parlons-en !</h2>
+    <div class="links">
+      <a class="pill primary" href={l.malt} rel="noopener" target="_blank">Me contacter sur Malt ↗</a>
+      <a class="pill" href={l.linkedin} rel="noopener" target="_blank">LinkedIn</a>
+      <a class="pill" href={l.behance} rel="noopener" target="_blank">Behance</a>
+      <a class="pill" href={l.vimeo} rel="noopener" target="_blank">Vimeo</a>
+      <a class="pill" href={l.dribbble} rel="noopener" target="_blank">Dribbble</a>
+    </div>
+    <p class="small">© {new Date().getFullYear()} {site.name} — {site.city}</p>
+  </div>
+</footer>
+<style>
+  .foot { background: var(--lilac); border-top: 3px solid var(--ink); padding: clamp(64px, 12vw, 140px) 0 40px; margin-top: clamp(64px, 10vw, 140px); border-radius: var(--radius) var(--radius) 0 0; }
+  .kicker { font-size: clamp(1.3rem, 3vw, 2rem); margin: 0 0 12px; }
+  h2 { font-size: clamp(3.4rem, 14vw, 11rem); }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .primary { background: var(--butter); }
+  .small { margin: 56px 0 0; font-size: .9rem; opacity: .7; }
+</style>

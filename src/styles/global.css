@@ -1,0 +1,47 @@
+@import '@fontsource-variable/dm-sans';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/fraunces/wght-italic.css';
+@import '@fontsource/bagel-fat-one';
+
+:root {
+  --cream: #fff8ee;
+  --ink: #2a2340;
+  --peach: #ffd3c2;
+  --pink: #ffc6dd;
+  --butter: #ffef9f;
+  --mint: #c4efd7;
+  --sky: #c3e2ff;
+  --lilac: #dcd2ff;
+  --font-display: 'Bagel Fat One', system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', Georgia, serif;
+  --font-body: 'DM Sans Variable', system-ui, sans-serif;
+  --radius: 28px;
+  --gutter: clamp(16px, 4vw, 56px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--cream); color: var(--ink); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+body { margin: 0; font: 400 1.0625rem/1.6 var(--font-body); overflow-x: clip; }
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 400; line-height: 0.95; letter-spacing: -0.01em; }
+.serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: 0; }
+.wrap { padding-inline: var(--gutter); max-width: 1500px; margin-inline: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
+
+.bg-peach { --bg: var(--peach); } .bg-pink { --bg: var(--pink); } .bg-butter { --bg: var(--butter); }
+.bg-mint { --bg: var(--mint); } .bg-sky { --bg: var(--sky); } .bg-lilac { --bg: var(--lilac); }
+
+.pill {
+  display: inline-flex; align-items: center; gap: .5em; padding: .55em 1.1em;
+  border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; text-decoration: none;
+  font-weight: 700; font-size: .95rem; transition: transform .25s cubic-bezier(.34, 1.8, .5, 1), background .2s;
+}
+.pill:hover { transform: translateY(-3px) rotate(-2deg); background: var(--butter); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

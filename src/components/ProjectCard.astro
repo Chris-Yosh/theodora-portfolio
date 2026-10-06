@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { project: CollectionEntry<'projects'>; index: number }
+const { project, index } = Astro.props;
+const d = project.data;
+const tilt = [-1.6, 1.2, -0.8, 1.8][index % 4];
+---
+<a class={`card bg-${d.color}`} href={`/projets/${project.id}/`} data-card style={`--tilt:${tilt}deg`}>
+  <div class="media"><img src={d.cover} alt="" loading="lazy" decoding="async" /></div>
+  <div class="info">
+    <p class="meta"><span>{d.client ?? ''}</span><span>{d.year}</span></p>
+    <h3>{d.title}</h3>
+    <ul>{d.disciplines.slice(0, 3).map((x) => <li>{x}</li>)}</ul>
+  </div>
+  {d.videos.length > 0 && <span class="play" aria-label="Contient une vidéo">▶</span>}
+</a>
+<style>
+  .card { position: relative; display: block; text-decoration: none; background: var(--bg, var(--peach)); border: 3px solid var(--ink); border-radius: var(--radius); padding: 14px 14px 22px; transform: rotate(var(--tilt)); box-shadow: 8px 8px 0 var(--ink); will-change: transform; }
+  .media { border-radius: calc(var(--radius) - 12px); overflow: hidden; border: 3px solid var(--ink); background: #fff; aspect-ratio: 4 / 3; }
+  .media img { width: 100%; height: 100%; object-fit: cover; }
+  .info { padding: 18px 8px 0; }
+  .meta { display: flex; justify-content: space-between; margin: 0 0 10px; font-weight: 700; font-size: .9rem; text-transform: uppercase; letter-spacing: .06em; }
+  h3 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+  ul { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 14px 0 0; }
+  li { background: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: .1em .75em; font-size: .85rem; font-weight: 500; }
+  .play { position: absolute; top: -14px; right: -10px; width: 52px; height: 52px; display: grid; place-items: center; background: var(--butter); border: 3px solid var(--ink); border-radius: 50%; transform: rotate(12deg); font-size: .9rem; }
+</style>

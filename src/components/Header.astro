@@ -1,0 +1,24 @@
+---
+import { site } from '../data/site';
+const nav = [
+  { href: '/#travaux', label: 'Travaux' },
+  { href: '/#carnet', label: 'Carnet' },
+  { href: '/#a-propos', label: 'À propos' },
+  { href: '/#contact', label: 'Contact' },
+];
+---
+<header class="top">
+  <a class="logo" href="/" aria-label={`${site.name}, accueil`}>Théodora<span class="serif"> Ballet</span></a>
+  <nav aria-label="Navigation principale">
+    {nav.map((n) => <a class="pill" href={n.href}>{n.label}</a>)}
+  </nav>
+</header>
+<style>
+  .top { position: fixed; z-index: 50; inset: 14px var(--gutter) auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
+  .top > * { pointer-events: auto; }
+  .logo { font: 1.35rem/1 var(--font-display); text-decoration: none; background: #fff; border: 2.5px solid var(--ink); border-radius: 999px; padding: .5em 1em; transition: transform .3s cubic-bezier(.34, 1.8, .5, 1); }
+  .logo:hover { transform: rotate(-3deg) scale(1.05); }
+  .logo .serif { font-size: 1.1em; }
+  nav { display: flex; gap: 8px; }
+  @media (max-width: 700px) { nav .pill:not(:last-child) { display: none; } .logo { font-size: 1.1rem; } }
+</style>

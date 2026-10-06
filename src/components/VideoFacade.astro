@@ -1,0 +1,22 @@
+---
+interface Props { id: string; hash?: string; title: string; poster: string; ratio: string }
+const { id, hash, title, poster, ratio } = Astro.props;
+const vertical = ratio === '9 / 16';
+---
+<figure class={`video ${vertical ? 'vertical' : ''}`} style={`--ratio:${ratio}`}>
+  <button type="button" data-vimeo={id} data-hash={hash} data-title={title} aria-label={`Lire la vidéo : ${title}`}>
+    <img src={poster} alt="" loading="lazy" />
+    <span class="btn" aria-hidden="true">▶</span>
+  </button>
+  <figcaption class="serif">{title}</figcaption>
+</figure>
+<style is:global>
+  .video { margin: 0; }
+  .video button, .video .vimeo-frame { display: block; width: 100%; aspect-ratio: var(--ratio); border: 3px solid var(--ink); border-radius: var(--radius); overflow: hidden; background: var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+  .video.vertical { max-width: 380px; }
+  .video button { position: relative; padding: 0; cursor: pointer; }
+  .video button img { width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+  .video .btn { position: absolute; inset: 0; margin: auto; width: 88px; height: 88px; display: grid; place-items: center; background: var(--butter); border: 3px solid var(--ink); border-radius: 50%; font-size: 1.6rem; transition: transform .4s cubic-bezier(.34, 1.8, .5, 1); }
+  .video button:hover .btn { transform: scale(1.15) rotate(-8deg); }
+  .video figcaption { margin-top: 18px; font-size: 1.15rem; }
+</style>

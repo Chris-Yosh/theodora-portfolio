@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import VideoFacade from '../../components/VideoFacade.astro';
+import Doodles from '../../components/Doodles.astro';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return all.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, next: all[(i + 1) % all.length] },
+  }));
+}
+const { project, next } = Astro.props;
+const { Content } = await render(project);
+const d = project.data;
+---
+<Base title={d.title} image={d.cover} description={`${d.title}${d.client ? ` pour ${d.client}` : ''} — ${d.disciplines.join(', ')}.`}>
+  <article>
+    <header class={`head bg-${d.color}`}>
+      <Doodles set="soft" />
+      <div class="wrap">
+        <a class="back pill" href="/#travaux">← Tous les projets</a>
+        <h1 data-split>{d.title}</h1>
+        <dl>
+          {d.client && <div><dt>Client</dt><dd>{d.client}</dd></div>}
+          <div><dt>Année</dt><dd>{d.year}</dd></div>
+          <div><dt>Discipline</dt><dd>{d.disciplines.join(' · ')}</dd></div>
+          {d.tools.length > 0 && <div><dt>Outils</dt><dd>{d.tools.join(' · ').replaceAll('Adobe ', '')}</dd></div>}
+        </dl>
+      </div>
+    </header>
+
+    <div class="wrap body">
+      <div class="text serif" data-reveal><Content /></div>
+
+      {d.videos.length > 0 && (
+        <div class="videos">
+          {d.videos.map((v) => <div data-reveal><VideoFacade id={v.id} hash={v.hash} title={v.title} poster={d.cover} ratio={v.ratio} /></div>)}
+        </div>
+      )}
+
+      {d.images.length > 0 && (
+        <div class="shots">
+          {d.images.map((src) => <img data-reveal src={src} alt="" loading="lazy" decoding="async" />)}
+        </div>
+      )}
+
+      <p class="ext"><a class="pill" href={d.behance} target="_blank" rel="noopener">Voir sur Behance ↗</a></p>
+    </div>
+
+    <a class={`next bg-${next.data.color}`} href={`/projets/${next.id}/`}>
+      <span class="serif">Projet suivant</span>
+      <strong>{next.data.title} →</strong>
+    </a>
+  </article>
+</Base>
+
+<style>
+  .head { position: relative; overflow: clip; background: var(--bg); padding: 140px 0 clamp(48px, 8vw, 96px); border-bottom: 3px solid var(--ink); border-radius: 0 0 var(--radius) var(--radius); }
+  .head .wrap { position: relative; z-index: 1; }
+  .back { margin-bottom: 28px; }
+  h1 { font-size: clamp(3rem, 11vw, 9rem); }
+  dl { display: flex; flex-wrap: wrap; gap: 14px 48px; margin: 36px 0 0; }
+  dt { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; opacity: .7; }
+  dd { margin: 2px 0 0; font-weight: 500; font-size: 1.1rem; }
+  .body { padding-top: clamp(40px, 7vw, 88px); display: grid; gap: clamp(40px, 7vw, 88px); }
+  .text { max-width: 46ch; font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.3; }
+  .text :global(p) { margin: 0; }
+  .videos { display: grid; gap: clamp(32px, 5vw, 64px); justify-items: start; }
+  .videos > :global(div:not(:has(.vertical))) { width: 100%; }
+  .shots { display: grid; gap: clamp(16px, 3vw, 36px); }
+  .shots img { width: 100%; height: auto; border: 3px solid var(--ink); border-radius: var(--radius); background: #fff; }
+  .next { display: block; margin-top: clamp(64px, 10vw, 140px); padding: clamp(48px, 9vw, 120px) var(--gutter); background: var(--bg, var(--peach)); border-block: 3px solid var(--ink); text-decoration: none; transition: filter .3s; }
+  .next:hover { filter: saturate(1.4) brightness(.97); }
+  .next span { display: block; font-size: 1.4rem; }
+  .next strong { font: clamp(2.4rem, 9vw, 7rem)/1 var(--font-display); font-weight: 400; }
+</style>

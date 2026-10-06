@@ -1,0 +1,145 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Doodles from '../components/Doodles.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../data/site';
+import carnet from '../data/carnet.json';
+
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const heroPicks = ['game-on', 'lhistoire-de-jay-joy', 'arte'].map((id) => projects.find((p) => p.id === id)!);
+const l = site.links;
+const badge = 'explainer videos • illustration • 3D • image par image • ';
+---
+<Base>
+  <section class="hero">
+    <Doodles set="hero" />
+    <div class="wrap hero-inner">
+      <p class="eyebrow serif">{site.city} · freelance</p>
+      <h1 data-split="lines">Théodora Ballet</h1>
+      <p class="role">{site.role}</p>
+      <p class="tagline">{site.tagline}</p>
+      <div class="cta">
+        <a class="pill go" href="#travaux">Voir les projets ↓</a>
+        <a class="pill" href={l.malt} target="_blank" rel="noopener">Me contacter</a>
+      </div>
+      <div class="floaters" aria-hidden="true">
+        {heroPicks.map((p, i) => (
+          <a class={`float f${i} bg-${p.data.color}`} data-hero-card href={`/projets/${p.id}/`} tabindex="-1">
+            <img src={p.data.cover} alt="" />
+          </a>
+        ))}
+      </div>
+      <svg class="badge" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="96" fill="var(--butter)" stroke="var(--ink)" stroke-width="3" />
+        <defs><path id="c" d="M100 100 m-70 0 a70 70 0 1 1 140 0 a70 70 0 1 1 -140 0" /></defs>
+        <text font-family="var(--font-display)" font-size="17" fill="var(--ink)"><textPath href="#c" textLength="436" lengthAdjust="spacing">{badge}</textPath></text>
+        <path d="M100 76 L108 94 L128 96 L113 109 L118 128 L100 118 L82 128 L87 109 L72 96 L92 94 Z" fill="var(--pink)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" />
+      </svg>
+    </div>
+  </section>
+
+  <section class="marquee" aria-label="Ils m'ont fait confiance">
+    <div class="track">
+      {[0, 1].map(() => (
+        <ul>{site.clients.map((c) => <li>{c}<span aria-hidden="true">✿</span></li>)}</ul>
+      ))}
+    </div>
+  </section>
+
+  <section id="travaux" class="works">
+    <div class="wrap">
+      <header class="sec-head">
+        <h2 data-reveal>Travaux</h2>
+        <p class="serif" data-reveal>{projects.length} projets, du plus récent au plus ancien</p>
+      </header>
+      <div class="grid">
+        {projects.map((p, i) => <div class="cell"><ProjectCard project={p} index={i} /></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="carnet" class="carnet">
+    <Doodles set="soft" />
+    <div class="wrap">
+      <header class="sec-head">
+        <h2 data-reveal>Carnet</h2>
+        <p class="serif" data-reveal>Boucles, essais, dessins — attrapez les stickers</p>
+      </header>
+      <div class="board" data-board>
+        {carnet.map((c, i) => (
+          <a class="sticker" data-drag href={c.url} target="_blank" rel="noopener" style={`--r:${((i * 37) % 13) - 6}deg`} title={c.title}>
+            <img src={c.img} alt={c.title} loading="lazy" draggable="false" />
+            <span>{c.title}</span>
+          </a>
+        ))}
+      </div>
+      <p class="more"><a class="pill" href={l.dribbble} target="_blank" rel="noopener">Tout voir sur Dribbble ↗</a></p>
+    </div>
+  </section>
+
+  <section id="a-propos" class="about">
+    <div class="wrap about-grid">
+      <h2 data-reveal>Hello, <span class="serif">c'est moi</span></h2>
+      <div data-reveal>
+        <p class="lead">Directrice artistique et motion designer, je suis spécialisée dans la conception et la production de vidéos explicatives.</p>
+        <p>De votre script, du moodboard et de l'élaboration du storyboard jusqu'à la production vidéo et d'illustrations, je vous accompagne à chaque étape de votre projet créatif.</p>
+        <ul class="services">
+          <li>Publicité TV</li>
+          <li>Vidéo explicative et institutionnelle</li>
+          <li>Bibliothèque d'assets d'animation 2D</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; padding: 120px 0 80px; overflow: clip; background: radial-gradient(circle at 15% 20%, var(--pink) 0, transparent 40%), radial-gradient(circle at 85% 75%, var(--sky) 0, transparent 45%), var(--cream); }
+  .hero-inner { position: relative; z-index: 1; width: 100%; }
+  .eyebrow { margin: 0 0 8px; font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
+  h1 { font-size: clamp(3.4rem, 12.5vw, 12rem); line-height: .93; }
+  .role { margin: 18px 0 0; font: 400 clamp(1.5rem, 4vw, 3rem)/1.05 var(--font-serif); font-style: italic; }
+  .tagline { max-width: 34ch; margin: 18px 0 0; font-size: 1.2rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .go { background: var(--butter); }
+  .floaters { position: absolute; right: 0; top: -60px; width: min(40vw, 520px); aspect-ratio: 1; pointer-events: none; }
+  .float { position: absolute; width: 56%; aspect-ratio: 4 / 3; border: 3px solid var(--ink); border-radius: 22px; overflow: hidden; box-shadow: 7px 7px 0 var(--ink); pointer-events: auto; }
+  .float img { width: 100%; height: 100%; object-fit: cover; }
+  .f0 { right: 0; top: 4%; transform: rotate(6deg); }
+  .f1 { left: 0; top: 36%; transform: rotate(-7deg); z-index: 2; }
+  .f2 { right: 6%; bottom: -4%; transform: rotate(3deg); }
+  .badge { position: absolute; right: clamp(0px, 4vw, 40px); bottom: -60px; width: clamp(110px, 14vw, 170px); animation: spin 18s linear infinite; z-index: 3; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 900px) { .floaters { position: relative; width: 100%; max-width: 420px; margin: 40px auto 0; top: 0; } .badge { bottom: auto; top: -8px; right: 0; width: 92px; } }
+
+  .marquee { overflow: hidden; background: var(--ink); color: var(--cream); border-block: 3px solid var(--ink); transform: rotate(-1.2deg); margin: -10px -2vw 0; }
+  .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  .marquee ul { display: flex; gap: 0; list-style: none; margin: 0; padding: 16px 0; }
+  .marquee li { font: 1.8rem/1 var(--font-display); padding-inline: 28px; white-space: nowrap; }
+  .marquee li span { margin-left: 56px; color: var(--pink); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  .works, .carnet, .about { position: relative; padding-top: clamp(80px, 12vw, 160px); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: clamp(32px, 6vw, 72px); }
+  .sec-head h2 { font-size: clamp(3rem, 10vw, 8rem); }
+  .sec-head p { margin: 0; font-size: 1.3rem; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 5vw, 72px) clamp(24px, 4vw, 56px); }
+  .cell:nth-child(even) { margin-top: clamp(40px, 8vw, 120px); }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .cell:nth-child(even) { margin-top: 0; } }
+
+  .carnet { overflow: clip; }
+  .board { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; padding: 24px 0; }
+  .sticker { position: relative; z-index: 1; width: clamp(130px, 18vw, 230px); background: #fff; padding: 10px 10px 8px; border: 3px solid var(--ink); border-radius: 18px; transform: rotate(var(--r)); text-decoration: none; box-shadow: 5px 5px 0 var(--ink); cursor: grab; touch-action: none; }
+  .sticker img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; user-select: none; }
+  .sticker span { display: block; margin-top: 6px; font: .85rem/1.2 var(--font-display); text-align: center; }
+  .more { text-align: center; margin-top: 36px; }
+
+  .about { padding-bottom: 40px; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(24px, 6vw, 96px); align-items: start; }
+  .about h2 { font-size: clamp(3rem, 8vw, 6.5rem); }
+  .lead { font: 400 clamp(1.4rem, 2.6vw, 2rem)/1.25 var(--font-serif); margin-top: 0; }
+  .services { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 28px 0 0; }
+  .services li { background: var(--mint); border: 2.5px solid var(--ink); border-radius: 999px; padding: .4em 1em; font-weight: 700; }
+  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } }
+</style>
